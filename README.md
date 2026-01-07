@@ -22,7 +22,7 @@
 ## 项目结构
 
 ```
-workNote/
+WorkNote/
 ├── app.json                 # 小程序全局配置
 ├── app.ts                   # 小程序入口文件
 ├── app.wxss                 # 全局样式
