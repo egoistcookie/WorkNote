@@ -1,0 +1,25 @@
+{
+  "name": "worknote",
+  "version": "1.0.0",
+  "description": "工作笔记微信小程序",
+  "main": "app.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "miniprogram",
+    "wechat",
+    "note"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vant/weapp": "^1.11.0"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "^3.12.0"
+  }
+}
+

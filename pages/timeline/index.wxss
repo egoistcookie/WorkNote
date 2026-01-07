@@ -1,0 +1,35 @@
+/* pages/timeline/index.wxss */
+.timeline-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 200rpx;
+}
+
+.tasks-section {
+  margin-bottom: 30rpx;
+}
+
+.start-button-wrapper {
+  padding: 0 30rpx;
+  margin: 30rpx 0;
+}
+
+.start-button-wrapper .button-text {
+  margin-left: 8rpx;
+}
+
+.fab {
+  position: fixed;
+  right: 30rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #1989fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  z-index: 999;
+}
+

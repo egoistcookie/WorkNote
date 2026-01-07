@@ -1,0 +1,11 @@
+# 图片资源目录
+# 
+# TabBar 图标文件（可选，当前使用文字模式）
+# 如需添加图标，请参考 图标说明.md 文件
+#
+# 需要添加的文件：
+# - timeline.png / timeline-active.png (时间线图标)
+# - todo.png / todo-active.png (待办图标)
+# - other.png / other-active.png (其他图标)
+# - profile.png / profile-active.png (个人图标)
+

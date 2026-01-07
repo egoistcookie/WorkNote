@@ -1,0 +1,104 @@
+/* components/calendar/index.wxss */
+.calendar-container {
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.date-selector {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 10rpx 20rpx;
+  background-color: #fff;
+  border: 1rpx solid #ebedf0;
+  border-radius: 8rpx;
+}
+
+.date-text {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #323233;
+}
+
+.header-actions {
+  display: flex;
+  gap: 20rpx;
+  align-items: center;
+}
+
+.action-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 1rpx solid #ebedf0;
+  border-radius: 8rpx;
+}
+
+.calendar-week {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80rpx;
+  height: 100rpx;
+  position: relative;
+  border-radius: 8rpx;
+}
+
+.calendar-day.selected {
+  background-color: #1989fa;
+}
+
+.calendar-day.selected .weekday,
+.calendar-day.selected .day-number {
+  color: #fff;
+}
+
+.weekday {
+  font-size: 22rpx;
+  color: #646566;
+  margin-bottom: 8rpx;
+}
+
+.day-number {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #323233;
+}
+
+.calendar-day.today .day-number {
+  color: #1989fa;
+  font-weight: 600;
+}
+
+.selected-indicator {
+  position: absolute;
+  bottom: 8rpx;
+  width: 32rpx;
+  height: 32rpx;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  color: #fff;
+}
+

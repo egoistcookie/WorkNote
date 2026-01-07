@@ -1,0 +1,22 @@
+<!--components/log-input/index.wxml-->
+<view class="log-input-container">
+  <view class="log-header">
+    <van-icon name="{{icon}}" size="20px" color="{{iconColor}}" />
+    <text class="log-title">{{title}}</text>
+  </view>
+  <view class="log-input-wrapper" bindtap="onTap">
+    <van-field
+      value="{{value}}"
+      placeholder="{{placeholder}}"
+      type="textarea"
+      autosize
+      border="{{false}}"
+      readonly
+      custom-class="log-field"
+    />
+    <view class="log-action">
+      <van-icon name="arrow" size="16px" color="#969799" />
+    </view>
+  </view>
+</view>
+

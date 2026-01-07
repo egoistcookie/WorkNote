@@ -1,0 +1,26 @@
+<!--components/task-item/index.wxml-->
+<view class="task-item" bindtap="onTaskTap">
+  <view class="task-time">
+    <text class="start-time">{{task.startTime}}</text>
+    <text wx:if="{{task.endTime}}" class="end-time">{{task.endTime}}</text>
+  </view>
+  <view class="task-content">
+    <view class="task-card">
+      <view class="task-header">
+        <van-icon name="bars" size="16px" />
+        <text class="task-title">{{task.title}}</text>
+      </view>
+      <view wx:if="{{task.duration}}" class="task-duration">{{task.duration}}</view>
+      <view class="task-footer">
+        <van-tag 
+          type="primary" 
+          custom-color="{{categoryColorMap[task.category]}}"
+          size="medium"
+        >
+          {{task.category}}
+        </van-tag>
+      </view>
+    </view>
+  </view>
+</view>
+

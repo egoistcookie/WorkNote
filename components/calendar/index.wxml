@@ -1,0 +1,35 @@
+<!--components/calendar/index.wxml-->
+<view class="calendar-container">
+  <view class="calendar-header">
+    <view class="date-selector" bindtap="onDatePickerTap">
+      <text class="date-text">{{dateText}}</text>
+      <van-icon name="calendar-o" size="16px" />
+    </view>
+    <view class="header-actions">
+      <view class="action-btn">
+        <van-icon name="apps-o" size="18px" />
+      </view>
+      <view class="action-btn">
+        <van-icon name="search" size="18px" />
+      </view>
+      <view class="action-btn">
+        <van-icon name="ellipsis" size="18px" />
+      </view>
+    </view>
+  </view>
+  
+  <view class="calendar-week">
+    <view 
+      wx:for="{{weekDates}}" 
+      wx:key="dateStr"
+      class="calendar-day {{item.isSelected ? 'selected' : ''}} {{item.isToday ? 'today' : ''}}"
+      data-date="{{item.dateStr}}"
+      bindtap="onDateSelect"
+    >
+      <text class="weekday">{{item.weekday}}</text>
+      <text class="day-number">{{item.dayNumber}}</text>
+      <view wx:if="{{item.isSelected}}" class="selected-indicator">1</view>
+    </view>
+  </view>
+</view>
+

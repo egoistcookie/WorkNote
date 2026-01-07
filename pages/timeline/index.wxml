@@ -1,0 +1,54 @@
+<!--pages/timeline/index.wxml-->
+<view class="timeline-page">
+  <calendar 
+    selectedDate="{{selectedDate}}"
+    bind:datechange="onDateChange"
+  />
+  
+  <log-input
+    type="morning"
+    title="晨间日志"
+    placeholder="点击记录今日计划..."
+    icon="sunrise-o"
+    value="{{morningLog}}"
+    bind:tap="onMorningLogTap"
+  />
+  
+  <view class="tasks-section">
+    <view 
+      wx:for="{{tasks}}" 
+      wx:key="id"
+    >
+      <task-item 
+        task="{{item}}"
+        bind:tap="onTaskTap"
+      />
+    </view>
+  </view>
+  
+  <view class="start-button-wrapper">
+    <van-button 
+      type="primary" 
+      size="large"
+      custom-color="#07c160"
+      bindtap="onStartTask"
+    >
+      <van-icon name="play" size="18px" />
+      <text class="button-text">开始</text>
+    </van-button>
+  </view>
+  
+  <log-input
+    type="evening"
+    title="夜晚总结"
+    placeholder="点击记录今日总结..."
+    icon="star-o"
+    value="{{eveningLog}}"
+    bind:tap="onEveningLogTap"
+  />
+  
+  <view class="fab" bindtap="onAddTask">
+    <van-icon name="plus" size="24px" color="#fff" />
+  </view>
+</view>
+

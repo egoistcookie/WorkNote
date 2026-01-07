@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "时间线",
+  "usingComponents": {
+    "calendar": "../../components/calendar/index",
+    "task-item": "../../components/task-item/index",
+    "log-input": "../../components/log-input/index",
+    "van-button": "@vant/weapp/button/index",
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}
+

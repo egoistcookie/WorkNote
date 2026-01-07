@@ -1,0 +1,27 @@
+# 微信小程序
+node_modules/
+miniprogram_npm/
+.DS_Store
+
+# TypeScript 编译产物（如果手动编译）
+*.js
+*.js.map
+!miniprogram_npm/**/*.js
+
+# 日志文件
+*.log
+npm-debug.log*
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+Thumbs.db
+
+# 构建产物
+dist/
+
