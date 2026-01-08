@@ -20,10 +20,12 @@ export interface Task {
   description?: string
   startTime: string // 格式: HH:mm
   endTime?: string // 格式: HH:mm
-  duration?: string // 格式: "1时20分"
+  duration?: string // 格式: "1时20分" 或 "1时20分30秒"
   category: Category
   status: TaskStatus
   date: string // 格式: YYYY-MM-DD
+  startTimestamp?: number // 开始时间戳（用于计时）
+  elapsedSeconds?: number // 已用秒数（用于实时显示）
   createdAt: number
   updatedAt: number
 }

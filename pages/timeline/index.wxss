@@ -9,6 +9,18 @@
   margin-bottom: 30rpx;
 }
 
+.completed-tasks-section {
+  margin-bottom: 30rpx;
+  padding: 0 30rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+  font-weight: 500;
+}
+
 .start-button-wrapper {
   padding: 0 30rpx;
   margin: 30rpx 0;

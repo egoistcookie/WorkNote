@@ -14,6 +14,7 @@
     bind:tap="onMorningLogTap"
   />
   
+  <!-- 进行中的任务 -->
   <view class="tasks-section">
     <view 
       wx:for="{{tasks}}" 
@@ -26,16 +27,31 @@
     </view>
   </view>
   
+  <!-- 开始/完成按钮 -->
   <view class="start-button-wrapper">
     <van-button 
       type="primary" 
       size="large"
-      custom-color="#07c160"
+      custom-color="{{currentTask ? '#1989fa' : '#07c160'}}"
       bindtap="onStartTask"
     >
-      <van-icon name="play" size="18px" />
-      <text class="button-text">开始</text>
+      <van-icon name="{{currentTask ? 'checked' : 'play'}}" size="18px" />
+      <text class="button-text">{{currentTask ? '完成' : '开始'}}</text>
     </van-button>
+  </view>
+  
+  <!-- 已完成的任务 -->
+  <view class="completed-tasks-section" wx:if="{{completedTasks.length > 0}}">
+    <view class="section-title">已完成</view>
+    <view 
+      wx:for="{{completedTasks}}" 
+      wx:key="id"
+    >
+      <task-item 
+        task="{{item}}"
+        bind:tap="onTaskTap"
+      />
+    </view>
   </view>
   
   <log-input
@@ -50,5 +66,12 @@
   <view class="fab" bindtap="onAddTask">
     <van-icon name="plus" size="24px" color="#fff" />
   </view>
+  
+  <!-- 任务添加弹窗 -->
+  <task-modal
+    show="{{showTaskModal}}"
+    bind:close="onTaskModalClose"
+    bind:save="onTaskSave"
+  />
 </view>
 

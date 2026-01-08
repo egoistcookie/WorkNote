@@ -5,12 +5,23 @@
     <text wx:if="{{task.endTime}}" class="end-time">{{task.endTime}}</text>
   </view>
   <view class="task-content">
-    <view class="task-card">
+    <view class="task-card {{task.status === 'in_progress' ? 'task-running' : ''}}">
       <view class="task-header">
         <van-icon name="bars" size="16px" />
-        <text class="task-title">{{task.title}}</text>
+        <view class="task-title-wrapper">
+          <text class="task-title">{{task.title}}</text>
+          <text wx:if="{{task.description}}" class="task-description"> {{task.description}}</text>
+        </view>
+        <!-- 进行中状态指示 -->
+        <view wx:if="{{task.status === 'in_progress'}}" class="running-indicator">
+          <view class="running-dot"></view>
+        </view>
       </view>
-      <view wx:if="{{task.duration}}" class="task-duration">{{task.duration}}</view>
+      <!-- 计时显示 -->
+      <view wx:if="{{task.duration}}" class="task-duration">
+        <van-icon wx:if="{{task.status === 'in_progress'}}" name="clock-o" size="14px" />
+        <text class="duration-text">{{task.duration}}</text>
+      </view>
       <view class="task-footer">
         <van-tag 
           type="primary" 

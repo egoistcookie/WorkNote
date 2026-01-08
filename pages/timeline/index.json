@@ -4,6 +4,7 @@
     "calendar": "../../components/calendar/index",
     "task-item": "../../components/task-item/index",
     "log-input": "../../components/log-input/index",
+    "task-modal": "../../components/task-modal/index",
     "van-button": "@vant/weapp/button/index",
     "van-icon": "@vant/weapp/icon/index"
   }

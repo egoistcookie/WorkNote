@@ -104,6 +104,42 @@ export function formatDuration(minutes: number): string {
 }
 
 /**
+ * 格式化时长为 "X时Y分Z秒"
+ */
+export function formatDurationWithSeconds(seconds: number): string {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secs = seconds % 60
+  
+  if (hours > 0) {
+    if (minutes > 0) {
+      if (secs > 0) {
+        return `${hours}时${minutes}分${secs}秒`
+      }
+      return `${hours}时${minutes}分`
+    }
+    if (secs > 0) {
+      return `${hours}时${secs}秒`
+    }
+    return `${hours}时`
+  } else if (minutes > 0) {
+    if (secs > 0) {
+      return `${minutes}分${secs}秒`
+    }
+    return `${minutes}分`
+  } else {
+    return `${secs}秒`
+  }
+}
+
+/**
+ * 计算两个时间戳之间的秒数差
+ */
+export function getSecondsDiff(startTimestamp: number, endTimestamp: number): number {
+  return Math.floor((endTimestamp - startTimestamp) / 1000)
+}
+
+/**
  * 获取星期几的中文
  */
 export function getWeekdayChinese(date: Date): string {
