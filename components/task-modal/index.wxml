@@ -24,18 +24,55 @@
       </view>
     </view>
 
-    <!-- 开始计时按钮 -->
-    <view class="start-timer-section">
+    <!-- 新建模式：开始计时按钮 -->
+    <view class="start-timer-section" wx:if="{{!isEditMode}}">
       <van-button
         type="primary"
-        size="large"
+        size="normal"
         custom-color="#07c160"
         bindtap="onStartTimer"
         class="start-timer-btn"
+        custom-style="width: 220rpx; min-width: 220rpx; max-width: 220rpx;"
       >
         <van-icon name="play" size="18px" />
         <text class="button-text">开始计时</text>
       </van-button>
+    </view>
+
+    <!-- 编辑模式：开始和结束时间 -->
+    <view class="time-section" wx:if="{{isEditMode}}">
+      <view class="time-item">
+        <view class="time-label">开始时间</view>
+        <picker 
+          mode="multiSelector" 
+          value="{{startTimeArray}}" 
+          range="{{timeColumns}}"
+          range-key=""
+          bindchange="onStartTimeChange"
+          bindcolumnchange="onStartTimeColumnChange"
+        >
+          <view class="time-picker">
+            {{startTime || '选择开始时间'}}
+            <van-icon name="arrow" size="14px" color="#969799" />
+          </view>
+        </picker>
+      </view>
+      <view class="time-item">
+        <view class="time-label">结束时间</view>
+        <picker 
+          mode="multiSelector" 
+          value="{{endTimeArray}}" 
+          range="{{timeColumns}}"
+          range-key=""
+          bindchange="onEndTimeChange"
+          bindcolumnchange="onEndTimeColumnChange"
+        >
+          <view class="time-picker">
+            {{endTime || '选择结束时间'}}
+            <van-icon name="arrow" size="14px" color="#969799" />
+          </view>
+        </picker>
+      </view>
     </view>
 
     <!-- 分类选择 -->
@@ -57,25 +94,42 @@
 
     <!-- 备注输入 -->
     <view class="note-section">
-      <van-field
+      <textarea
         value="{{taskNote}}"
         placeholder="≡ 添加备注..."
-        border="{{false}}"
-        bind:input="onNoteInput"
-        custom-style="background-color: #f5f5f5; border-radius: 8rpx; padding: 20rpx;"
+        bindinput="onNoteInput"
+        class="note-textarea"
+        maxlength="200"
+        auto-height
       />
     </view>
 
-    <!-- 保存按钮 -->
+    <!-- 保存和删除按钮 -->
     <view class="save-section">
-      <van-button
-        type="primary"
-        size="large"
-        bindtap="onSave"
-        class="save-btn"
-      >
-        保存
-      </van-button>
+      <view class="button-group">
+        <view wx:if="{{isEditMode}}" class="delete-btn-wrapper">
+          <van-button
+            type="danger"
+            size="normal"
+            bindtap="onDelete"
+            class="delete-btn"
+            custom-style="width: 220rpx; min-width: 220rpx; max-width: 220rpx;"
+          >
+            删除
+          </van-button>
+        </view>
+        <view class="save-btn-wrapper">
+          <van-button
+            type="primary"
+            size="normal"
+            bindtap="onSave"
+            class="save-btn"
+            custom-style="width: 220rpx; min-width: 220rpx; max-width: 220rpx;"
+          >
+            保存
+          </van-button>
+        </view>
+      </view>
     </view>
   </view>
 </van-popup>

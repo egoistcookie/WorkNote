@@ -7,6 +7,10 @@ Component({
     task: {
       type: Object,
       value: {} as Task
+    },
+    selected: {
+      type: Boolean,
+      value: false
     }
   },
 
@@ -17,6 +21,10 @@ Component({
   methods: {
     onTaskTap() {
       this.triggerEvent('tap', { task: this.properties.task })
+    },
+
+    onDetailTap() {
+      this.triggerEvent('detail', { task: this.properties.task })
     },
 
     getCategoryColor(category: Category): string {

@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "任务详情",
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
+    "van-tag": "@vant/weapp/tag/index",
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}
+

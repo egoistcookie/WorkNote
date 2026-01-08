@@ -7,6 +7,7 @@
 
 .tasks-section {
   margin-bottom: 30rpx;
+  padding: 0 30rpx;
 }
 
 .completed-tasks-section {
@@ -24,10 +25,37 @@
 .start-button-wrapper {
   padding: 0 30rpx;
   margin: 30rpx 0;
+  display: flex;
+  justify-content: center;
 }
 
 .start-button-wrapper .button-text {
   margin-left: 8rpx;
+}
+
+.action-buttons-wrapper {
+  padding: 0 30rpx;
+  margin: 30rpx 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.action-buttons-wrapper .button-text {
+  margin-left: 8rpx;
+}
+
+.pause-btn,
+.resume-btn,
+.complete-btn {
+  min-width: 140rpx;
+}
+
+.pause-btn {
+  background-color: #ffffff !important;
+  border: 1rpx solid #ebedf0 !important;
+  color: #323233 !important;
 }
 
 .fab {

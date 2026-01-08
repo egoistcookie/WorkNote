@@ -5,12 +5,20 @@
     <text wx:if="{{task.endTime}}" class="end-time">{{task.endTime}}</text>
   </view>
   <view class="task-content">
-    <view class="task-card {{task.status === 'in_progress' ? 'task-running' : ''}}">
+    <view class="task-card {{task.status === 'in_progress' ? 'task-running' : ''}} {{selected ? 'task-selected' : ''}}">
       <view class="task-header">
         <van-icon name="bars" size="16px" />
         <view class="task-title-wrapper">
           <text class="task-title">{{task.title}}</text>
           <text wx:if="{{task.description}}" class="task-description"> {{task.description}}</text>
+        </view>
+        <!-- 详情按钮（仅未完成任务显示） -->
+        <view 
+          wx:if="{{task.status !== 'completed'}}" 
+          class="detail-button"
+          catchtap="onDetailTap"
+        >
+          <van-icon name="setting-o" size="18px" color="#969799" />
         </view>
         <!-- 进行中状态指示 -->
         <view wx:if="{{task.status === 'in_progress'}}" class="running-indicator">

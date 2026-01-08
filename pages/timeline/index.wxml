@@ -14,29 +14,70 @@
     bind:tap="onMorningLogTap"
   />
   
-  <!-- 进行中的任务 -->
-  <view class="tasks-section">
+  <!-- 未完成的任务 -->
+  <view class="tasks-section" wx:if="{{tasks.length > 0}}">
+    <view class="section-title">未完成</view>
     <view 
       wx:for="{{tasks}}" 
       wx:key="id"
     >
       <task-item 
         task="{{item}}"
+        selected="{{selectedTaskId === item.id}}"
         bind:tap="onTaskTap"
+        bind:detail="onTaskDetail"
       />
     </view>
   </view>
   
-  <!-- 开始/完成按钮 -->
-  <view class="start-button-wrapper">
+  <!-- 按钮（仅在有未完成任务时显示） -->
+  <view class="action-buttons-wrapper" wx:if="{{tasks.length > 0 && selectedTask}}">
+    <!-- 选中任务是进行状态时，显示暂停按钮 -->
+    <van-button 
+      wx:if="{{selectedTask.status === 'in_progress'}}"
+      type="default" 
+      size="normal"
+      bindtap="onPauseTask"
+      class="pause-btn"
+    >
+      <van-icon name="pause" size="18px" />
+      <text class="button-text">暂停</text>
+    </van-button>
+    <!-- 选中任务是暂停状态时，显示开始按钮 -->
+    <van-button 
+      wx:if="{{selectedTask.status === 'paused'}}"
+      type="primary" 
+      size="normal"
+      custom-color="#07c160"
+      bindtap="onResumeTask"
+      class="resume-btn"
+    >
+      <van-icon name="play" size="18px" />
+      <text class="button-text">开始</text>
+    </van-button>
+    <!-- 完成按钮 -->
+    <van-button 
+      type="primary" 
+      size="normal"
+      custom-color="#1989fa"
+      bindtap="onCompleteTask"
+      class="complete-btn"
+    >
+      <van-icon name="checked" size="18px" />
+      <text class="button-text">完成</text>
+    </van-button>
+  </view>
+  
+  <!-- 开始按钮（无未完成任务时显示） -->
+  <view class="start-button-wrapper" wx:else>
     <van-button 
       type="primary" 
       size="large"
-      custom-color="{{currentTask ? '#1989fa' : '#07c160'}}"
-      bindtap="onStartTask"
+      custom-color="#07c160"
+      bindtap="onAddTask"
     >
-      <van-icon name="{{currentTask ? 'checked' : 'play'}}" size="18px" />
-      <text class="button-text">{{currentTask ? '完成' : '开始'}}</text>
+      <van-icon name="plus" size="18px" />
+      <text class="button-text">开始</text>
     </van-button>
   </view>
   
@@ -67,11 +108,13 @@
     <van-icon name="plus" size="24px" color="#fff" />
   </view>
   
-  <!-- 任务添加弹窗 -->
+  <!-- 任务添加/编辑弹窗 -->
   <task-modal
     show="{{showTaskModal}}"
+    task="{{editingTask}}"
     bind:close="onTaskModalClose"
     bind:save="onTaskSave"
+    bind:delete="onTaskDelete"
   />
 </view>
 

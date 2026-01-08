@@ -1,0 +1,94 @@
+<!--pages/task-detail/index.wxml-->
+<view class="task-detail-page">
+  <view class="task-info-card">
+    <!-- 任务标题 -->
+    <view class="info-section">
+      <view class="section-label">任务标题</view>
+      <view class="section-value">{{task.title}}</view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="info-section" wx:if="{{task.description}}">
+      <view class="section-label">备注</view>
+      <view class="section-value">{{task.description}}</view>
+    </view>
+
+    <!-- 分类 -->
+    <view class="info-section">
+      <view class="section-label">分类</view>
+      <van-tag 
+        type="primary" 
+        custom-color="{{categoryColor}}"
+        size="medium"
+      >
+        {{task.category}}
+      </van-tag>
+    </view>
+
+    <!-- 状态 -->
+    <view class="info-section">
+      <view class="section-label">状态</view>
+      <view class="section-value">{{statusText}}</view>
+    </view>
+
+    <!-- 开始时间 -->
+    <view class="info-section">
+      <view class="section-label">开始时间</view>
+      <view class="time-input-wrapper" wx:if="{{task.status === 'completed'}}">
+        <picker 
+          mode="time" 
+          value="{{task.startTime}}" 
+          bindchange="onStartTimeChange"
+        >
+          <view class="time-picker">
+            {{task.startTime}}
+            <van-icon name="arrow" size="14px" color="#969799" />
+          </view>
+        </picker>
+      </view>
+      <view class="section-value" wx:else>{{task.startTime}}</view>
+    </view>
+
+    <!-- 结束时间 -->
+    <view class="info-section" wx:if="{{task.endTime}}">
+      <view class="section-label">结束时间</view>
+      <view class="time-input-wrapper" wx:if="{{task.status === 'completed'}}">
+        <picker 
+          mode="time" 
+          value="{{task.endTime}}" 
+          bindchange="onEndTimeChange"
+        >
+          <view class="time-picker">
+            {{task.endTime}}
+            <van-icon name="arrow" size="14px" color="#969799" />
+          </view>
+        </picker>
+      </view>
+      <view class="section-value" wx:else>{{task.endTime}}</view>
+    </view>
+
+    <!-- 耗时 -->
+    <view class="info-section" wx:if="{{task.duration}}">
+      <view class="section-label">耗时</view>
+      <view class="section-value">{{task.duration}}</view>
+    </view>
+
+    <!-- 日期 -->
+    <view class="info-section">
+      <view class="section-label">日期</view>
+      <view class="section-value">{{task.date}}</view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-button-wrapper" wx:if="{{task.status === 'completed'}}">
+    <van-button 
+      type="primary" 
+      size="large"
+      bindtap="onSave"
+    >
+      保存修改
+    </van-button>
+  </view>
+</view>
+

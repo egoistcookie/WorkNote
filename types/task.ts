@@ -7,8 +7,18 @@ import { Category } from './common'
 export enum TaskStatus {
   PENDING = 'pending',
   IN_PROGRESS = 'in_progress',
+  PAUSED = 'paused',
   COMPLETED = 'completed',
   CANCELLED = 'cancelled'
+}
+
+/**
+ * 时间段数据
+ */
+export interface TimeSegment {
+  startTimestamp: number
+  endTimestamp?: number
+  duration?: number // 秒数
 }
 
 /**
@@ -24,8 +34,9 @@ export interface Task {
   category: Category
   status: TaskStatus
   date: string // 格式: YYYY-MM-DD
-  startTimestamp?: number // 开始时间戳（用于计时）
+  startTimestamp?: number // 当前时间段开始时间戳（用于计时）
   elapsedSeconds?: number // 已用秒数（用于实时显示）
+  timeSegments?: TimeSegment[] // 所有时间段记录
   createdAt: number
   updatedAt: number
 }

@@ -32,6 +32,23 @@ export function formatTime(date: Date): string {
 }
 
 /**
+ * 格式化时间为 HH:mm:ss
+ */
+export function formatTimeWithSeconds(date: Date): string {
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${hours}:${minutes}:${seconds}`
+}
+
+/**
+ * 获取当前时间字符串（包含秒）
+ */
+export function getCurrentTimeWithSeconds(): string {
+  return formatTimeWithSeconds(new Date())
+}
+
+/**
  * 获取当前日期字符串
  */
 export function getCurrentDate(): string {
@@ -153,5 +170,31 @@ export function getWeekdayChinese(date: Date): string {
 export function getWeekdayAbbr(date: Date): string {
   const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   return weekdays[date.getDay()]
+}
+
+/**
+ * 将日期字符串和时间字符串转换为时间戳
+ * 支持 HH:mm 和 HH:mm:ss 格式
+ */
+export function parseTimeToTimestamp(dateStr: string, timeStr: string): number | null {
+  try {
+    const [year, month, day] = dateStr.split('-').map(Number)
+    const timeParts = timeStr.split(':')
+    const hour = parseInt(timeParts[0]) || 0
+    const minute = parseInt(timeParts[1]) || 0
+    const second = parseInt(timeParts[2]) || 0
+    const date = new Date(year, month - 1, day, hour, minute, second)
+    return date.getTime()
+  } catch (e) {
+    return null
+  }
+}
+
+/**
+ * 从时间戳格式化时间为 HH:mm
+ */
+export function formatTimeFromTimestamp(timestamp: number): string {
+  const date = new Date(timestamp)
+  return formatTime(date)
 }
 

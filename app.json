@@ -3,7 +3,8 @@
     "pages/timeline/index",
     "pages/todo/index",
     "pages/other/index",
-    "pages/profile/index"
+    "pages/profile/index",
+    "pages/task-detail/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

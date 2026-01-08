@@ -28,6 +28,8 @@
 
 .task-content {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .task-card {
@@ -35,6 +37,8 @@
   border-radius: 16rpx;
   padding: 24rpx;
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .task-card.task-running {
@@ -42,11 +46,29 @@
   box-shadow: 0 4rpx 12rpx rgba(25, 137, 250, 0.2);
 }
 
+.task-card.task-selected {
+  border: 2rpx solid #07c160;
+  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.2);
+}
+
 .task-header {
   display: flex;
   align-items: center;
   gap: 12rpx;
   margin-bottom: 12rpx;
+  position: relative;
+}
+
+.detail-button {
+  position: absolute;
+  right: -8rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
 .task-title-wrapper {
@@ -54,8 +76,11 @@
   display: flex;
   align-items: center;
   min-width: 0;
+  max-width: calc(100% - 60rpx);
   line-height: 1.5;
   flex-wrap: nowrap;
+  overflow: hidden;
+  margin-right: 40rpx;
 }
 
 .task-title {
@@ -82,6 +107,9 @@
 .running-indicator {
   display: flex;
   align-items: center;
+  margin-right: 40rpx;
+  position: relative;
+  z-index: 5;
 }
 
 .running-dot {
