@@ -121,7 +121,6 @@ Page({
     const chartData = this.calculateChartData(categoryStats)
     
     const totalDurationText = formatDurationWithSeconds(totalSeconds)
-    console.log('设置总时长:', { totalSeconds, totalDurationText })
     
     this.setData({
       categoryStats,
@@ -171,7 +170,6 @@ Page({
       .fields({ node: true, size: true })
       .exec((res) => {
         if (!res || !res[0]) {
-          console.error('无法获取 canvas 节点')
           return
         }
         
@@ -368,7 +366,6 @@ Page({
     // 使用 canvasInfo 中保存的尺寸信息
     const canvasInfo = this.data.canvasInfo
     if (!canvasInfo || !canvasInfo.width || !canvasInfo.height) {
-      console.log('canvasInfo 未初始化，等待绘制完成')
       return
     }
     
@@ -395,8 +392,6 @@ Page({
         const x = (clickX / displayWidth) * logicWidth
         const y = (clickY / displayHeight) * logicHeight
         
-        console.log('点击位置:', { clickX, clickY, displayWidth, displayHeight, logicWidth, logicHeight, x, y })
-        
         // 检查点击是否在某个扇形内
         const clickedIndex = this.getClickedSegmentIndex(x, y)
         
@@ -413,7 +408,6 @@ Page({
   getClickedSegmentIndex(x: number, y: number): number {
     const canvasInfo = this.data.canvasInfo
     if (!canvasInfo) {
-      console.log('canvasInfo 不存在')
       return -1
     }
     
@@ -421,7 +415,6 @@ Page({
     const chartData = this.data.chartData
     
     if (!chartData || chartData.length === 0) {
-      console.log('chartData 为空')
       return -1
     }
     
@@ -430,11 +423,8 @@ Page({
     const dy = y - centerY
     const distance = Math.sqrt(dx * dx + dy * dy)
     
-    console.log('点击检测:', { x, y, centerX, centerY, distance, innerRadius, radius })
-    
     // 检查是否在圆环范围内（允许选中时凸出的范围）
     if (distance < innerRadius || distance > radius + 20) {
-      console.log('点击不在圆环范围内')
       return -1
     }
     
@@ -459,9 +449,6 @@ Page({
       angle -= Math.PI * 2
     }
     
-    const angleDeg = angle * 180 / Math.PI
-    console.log('计算角度:', { angle: angleDeg, unit: '度' })
-    
     // 查找对应的扇形
     for (let i = 0; i < chartData.length; i++) {
       const segment = chartData[i]
@@ -483,37 +470,21 @@ Page({
       if (normalizedStartAngle >= Math.PI * 2) normalizedStartAngle -= Math.PI * 2
       if (normalizedEndAngle >= Math.PI * 2) normalizedEndAngle -= Math.PI * 2
       
-      const startDeg = normalizedStartAngle * 180 / Math.PI
-      const endDeg = normalizedEndAngle * 180 / Math.PI
-      const clickDeg = angle * 180 / Math.PI
-      
-      console.log('扇形 ' + i + ':', { 
-        category: segment.category,
-        startAngle: startDeg, 
-        endAngle: endDeg,
-        clickAngle: clickDeg,
-        originalStart: startAngle * 180 / Math.PI,
-        originalEnd: endAngle * 180 / Math.PI
-      })
-      
       // 检查点击角度是否在扇形范围内
       // 如果跨越了 0 度（normalizedEndAngle < normalizedStartAngle），需要检查两个范围
       if (normalizedEndAngle < normalizedStartAngle) {
         // 跨越了 0 度：扇形从 normalizedStartAngle 到 2π，然后从 0 到 normalizedEndAngle
         if (angle >= normalizedStartAngle || angle <= normalizedEndAngle) {
-          console.log('匹配扇形 ' + i + ' (跨越0度)')
           return i
         }
       } else {
         // 正常情况：扇形从 normalizedStartAngle 到 normalizedEndAngle
         if (angle >= normalizedStartAngle && angle <= normalizedEndAngle) {
-          console.log('匹配扇形 ' + i)
           return i
         }
       }
     }
     
-    console.log('未匹配任何扇形')
     return -1
   },
 

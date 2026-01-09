@@ -16,9 +16,11 @@ App<IAppOption>({
     // 登录
     wx.login({
       success: res => {
-        console.log(res.code)
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       },
+      fail: err => {
+        // 登录失败，静默处理（可能是网络问题或开发者工具环境问题）
+      }
     })
   },
 })

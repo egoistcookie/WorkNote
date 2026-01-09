@@ -1,0 +1,59 @@
+<!--pages/todo-detail/index.wxml-->
+<view class="todo-detail-page">
+  <!-- 统计信息 -->
+  <view class="stats-section">
+    <view class="stats-card">
+      <view class="stats-label">累积耗时</view>
+      <view class="stats-value">{{totalDurationText}}</view>
+      <view class="stats-count">共 {{tasks.length}} 个任务</view>
+    </view>
+  </view>
+
+  <!-- 任务列表 -->
+  <view class="tasks-section">
+    <view class="section-title">任务列表</view>
+    <view class="task-list">
+      <view
+        wx:for="{{tasks}}"
+        wx:key="id"
+        class="task-item {{item.status === 'completed' ? 'completed' : ''}}"
+        data-task="{{item}}"
+        bindtap="onTaskTap"
+      >
+        <view class="task-header">
+          <view class="task-checkbox {{item.status === 'completed' ? 'checked' : ''}}">
+            <van-icon 
+              wx:if="{{item.status === 'completed'}}"
+              name="success" 
+              size="16px" 
+              color="#ffffff" 
+            />
+          </view>
+          <text class="task-title">{{item.title}}</text>
+        </view>
+        
+        <view class="task-description" wx:if="{{item.description}}">
+          {{item.description}}
+        </view>
+        
+        <view class="task-meta">
+          <view class="task-info">
+            <text class="task-status">{{item.status === 'completed' ? '已完成' : '未完成'}}</text>
+            <text class="task-date" wx:if="{{item.startDate || item.endDate}}">
+              {{item.startDate || ''}} {{item.startDate && item.endDate ? '-' : ''}} {{item.endDate || ''}}
+            </text>
+          </view>
+          <view class="task-duration" wx:if="{{item.duration}}">
+            {{item.duration}}
+          </view>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:if="{{tasks.length === 0}}">
+        <van-icon name="info-o" size="48px" color="#c8c9cc" />
+        <text class="empty-text">该分类下暂无任务</text>
+      </view>
+    </view>
+  </view>
+</view>
+

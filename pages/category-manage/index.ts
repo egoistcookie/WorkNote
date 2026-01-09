@@ -1,6 +1,6 @@
 // pages/category-manage/index.ts
 import { Category, CategoryColor } from '../../types/common'
-import { getStorageSync, setStorageSync } from '../../utils/storage'
+import { getAllCategories, setAllCategories } from '../../utils/category'
 
 interface CategoryItem {
   name: string
@@ -20,26 +20,17 @@ Page({
     this.loadCategories()
   },
 
+  onShow() {
+    // 每次显示时重新加载分类（可能在其他页面创建了新分类，如待办任务）
+    this.loadCategories()
+  },
+
   loadCategories() {
-    // 从存储获取所有分类（包括默认分类的修改）
-    const savedCategories = getStorageSync<CategoryItem[]>('all_categories')
-    
-    if (savedCategories && savedCategories.length > 0) {
-      // 使用保存的分类
-      this.setData({
-        categories: savedCategories
-      })
-    } else {
-      // 首次加载，使用默认分类
-      const defaultCategories: CategoryItem[] = Object.values(Category).map(cat => ({
-        name: cat,
-        color: CategoryColor[cat] || '#969799'
-      }))
-      setStorageSync('all_categories', defaultCategories)
-      this.setData({
-        categories: defaultCategories
-      })
-    }
+    // 使用统一的分类管理函数，确保包含所有分类（包括待办任务创建的分类）
+    const allCategories = getAllCategories()
+    this.setData({
+      categories: allCategories
+    })
   },
 
   onAddCategory() {
@@ -96,7 +87,7 @@ Page({
         color: newCategoryColor
       }
       
-      setStorageSync('all_categories', updatedCategories)
+      setAllCategories(updatedCategories)
       
       this.setData({
         categories: updatedCategories,
@@ -110,7 +101,7 @@ Page({
       }
       
       const updatedCategories = [...categories, newCategory]
-      setStorageSync('all_categories', updatedCategories)
+      setAllCategories(updatedCategories)
       
       this.setData({
         categories: updatedCategories,
@@ -137,7 +128,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           const updatedCategories = categories.filter((_: CategoryItem, i: number) => i !== index)
-          setStorageSync('all_categories', updatedCategories)
+          setAllCategories(updatedCategories)
           
           this.setData({
             categories: updatedCategories

@@ -68,7 +68,7 @@ Page({
   },
 
   onTaskSave(e: WechatMiniprogram.CustomEvent) {
-    const { id, title, description, priority, startDate, endDate, category, isEdit } = e.detail
+    const { id, title, description, priority, startDate, endDate, category, categoryColor, isEdit } = e.detail
     
     const tasksKey = 'todo_tasks'
     const allTasks = getStorageSync<TodoTask[]>(tasksKey) || []
@@ -85,7 +85,7 @@ Page({
             priority: priority || task.priority,
             startDate,
             endDate,
-            category,
+            category: title, // 分类名称就是任务标题
             updatedAt: now
           }
         }
@@ -101,7 +101,7 @@ Page({
         priority: priority || this.data.currentPriority,
         startDate,
         endDate,
-        category,
+        category: title, // 分类名称就是任务标题
         status: TaskStatus.PENDING,
         createdAt: now,
         updatedAt: now
@@ -142,29 +142,35 @@ Page({
   },
 
   onTaskTap(e: WechatMiniprogram.CustomEvent) {
-    // 检查是否是组件触发的自定义事件
+    // 只处理组件触发的自定义事件
     const detail = e.detail
-    console.log('onTaskTap 事件详情:', detail)
     
     // 如果是点击坐标（有 x, y 属性），说明是直接点击了外层 view，忽略
     if (detail && typeof detail.x === 'number' && typeof detail.y === 'number') {
-      console.warn('接收到点击坐标，忽略此事件')
       return
     }
     
     const { task } = detail || {}
     
     // 安全检查
-    if (!task) {
-      console.error('任务数据为空:', detail)
+    if (!task || !task.id) {
       return
     }
     
-    // 可以打开任务详情或编辑
-    this.setData({
-      showTaskModal: true,
-      editingTask: task,
-      currentPriority: task.priority || TaskPriority.URGENT_IMPORTANT
-    })
+    // 待办任务的标题就是分类名称，跳转到详情页
+    const categoryName = task.title || task.category
+    if (categoryName) {
+      // 使用 navigateTo 的 success 回调确保页面跳转流畅
+      wx.navigateTo({
+        url: `/pages/todo-detail/index?category=${encodeURIComponent(categoryName)}`
+      })
+    } else {
+      // 没有标题，打开编辑弹窗
+      this.setData({
+        showTaskModal: true,
+        editingTask: task,
+        currentPriority: task.priority || TaskPriority.URGENT_IMPORTANT
+      })
+    }
   }
 })

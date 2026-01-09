@@ -46,6 +46,12 @@
         <text class="action-text">{{endDate || '结束日期'}}</text>
       </view>
 
+      <!-- 颜色选择 -->
+      <view class="action-item" bindtap="onColorTap">
+        <view class="color-dot" style="background-color: {{selectedColor}}"></view>
+        <text class="action-text">选择颜色</text>
+      </view>
+
       <!-- 发送按钮 -->
       <view class="send-button" bindtap="onSave">
         <van-icon name="send" size="24px" color="#1989fa" />
@@ -84,5 +90,32 @@
     bind:confirm="onEndDateChange"
     bind:cancel="onEndDateCancel"
   />
+</van-popup>
+
+<!-- 颜色选择弹窗 -->
+<van-popup
+  show="{{showColorPicker}}"
+  position="bottom"
+  bind:close="onColorPickerClose"
+  custom-style="height: 50%; border-radius: 20rpx 20rpx 0 0;"
+>
+  <view class="color-picker">
+    <view class="picker-header">
+      <text class="picker-title">选择颜色</text>
+      <van-icon name="cross" size="20px" color="#969799" bindtap="onColorPickerClose" />
+    </view>
+    <view class="color-grid">
+      <view
+        wx:for="{{colorOptions}}"
+        wx:key="*this"
+        class="color-item {{selectedColor === item ? 'selected' : ''}}"
+        style="background-color: {{item}}"
+        data-color="{{item}}"
+        bindtap="onColorSelect"
+      >
+        <van-icon wx:if="{{selectedColor === item}}" name="success" size="20px" color="#ffffff" />
+      </view>
+    </view>
+  </view>
 </van-popup>
 

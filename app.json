@@ -8,7 +8,8 @@
     "pages/category-manage/index",
     "pages/summary-manage/index",
     "pages/todo-manage/index",
-    "pages/data-manage/index"
+    "pages/data-manage/index",
+    "pages/todo-detail/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

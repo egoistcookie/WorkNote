@@ -35,8 +35,13 @@ Component({
   },
 
   attached() {
-    // 加载分类列表
-    this.loadCategories()
+    // 组件挂载时加载分类列表
+    // 注意：在 attached 中调用 methods 需要使用 setTimeout 确保 methods 已初始化
+    setTimeout(() => {
+      if (this.loadCategories) {
+        this.loadCategories()
+      }
+    }, 0)
   },
 
   pageLifetimes: {
@@ -49,12 +54,16 @@ Component({
   observers: {
     show(show) {
       if (show) {
+        // 每次显示时重新加载分类（可能在其他页面修改了分类，如待办任务创建了新分类）
+        // 先加载分类，再执行其他操作
+        this.loadCategories()
+        
         const task = this.properties.task
         if (task) {
           // 编辑模式：加载任务数据
           this.loadTaskData(task)
         } else {
-          // 新建模式：重置表单
+          // 新建模式：重置表单（resetForm 内部也会使用 getAllCategories，所以这里不需要延迟）
           this.resetForm()
         }
       }
@@ -81,8 +90,11 @@ Component({
     resetForm() {
       const now = new Date()
       const defaultTimeArray = [now.getHours(), now.getMinutes(), now.getSeconds()]
-      const allCategories = getAllCategories()
-      const defaultCategory = allCategories.length > 0 ? allCategories[0].name : Category.TROUBLESHOOT_PRODUCTION
+      // 注意：这里不需要重新加载分类，因为 loadCategories() 已经在 observers.show 中调用了
+      // 直接使用 data.categories 中的第一个分类作为默认分类
+      const defaultCategory = this.data.categories.length > 0 
+        ? this.data.categories[0].label 
+        : Category.TROUBLESHOOT_PRODUCTION
       
       this.setData({
         taskTitle: '',

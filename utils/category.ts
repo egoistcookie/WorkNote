@@ -1,11 +1,18 @@
 // utils/category.ts
 import { Category, CategoryColor } from '../types/common'
-import { getStorageSync } from './storage'
+import { getStorageSync, setStorageSync } from './storage'
 
-interface CategoryItem {
+export interface CategoryItem {
   name: string
   color: string
 }
+
+// 默认颜色选项
+export const DEFAULT_COLOR_OPTIONS = [
+  '#1989fa', '#07c160', '#ff9800', '#ee0a24', '#9c27b0', '#00bcd4', '#ffc107', '#e91e63', '#607d8b', '#795548',
+  '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50',
+  '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#607d8b', '#9e9e9e', '#424242'
+]
 
 /**
  * 获取分类颜色（优先从存储读取，如果没有则使用默认颜色）
@@ -42,9 +49,19 @@ export function getAllCategories(): CategoryItem[] {
   }
   
   // 如果没有保存的分类，返回默认分类
-  return Object.values(Category).map(cat => ({
+  const defaultCategories = Object.values(Category).map(cat => ({
     name: cat,
     color: CategoryColor[cat] || '#969799'
   }))
+  // 初始化并保存默认分类
+  setStorageSync('all_categories', defaultCategories)
+  return defaultCategories
+}
+
+/**
+ * 设置所有分类
+ */
+export function setAllCategories(categories: CategoryItem[]): void {
+  setStorageSync('all_categories', categories)
 }
 

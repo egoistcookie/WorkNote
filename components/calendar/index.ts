@@ -94,7 +94,6 @@ Component({
 
     onDatePickerTap() {
       // 后续实现日期选择器
-      console.log('打开日期选择器')
     }
   }
 })

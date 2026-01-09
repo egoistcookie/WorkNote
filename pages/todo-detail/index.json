@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "待办详情",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}
+

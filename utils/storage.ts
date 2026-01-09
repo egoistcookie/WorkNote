@@ -24,7 +24,7 @@ export function setStorageSync<T>(key: string, value: T): void {
   try {
     wx.setStorageSync(key, value)
   } catch (err) {
-    console.error('存储数据失败:', err)
+    // 存储失败，静默处理
   }
 }
 
@@ -54,7 +54,6 @@ export function getStorageSync<T>(key: string): T | null {
   try {
     return wx.getStorageSync(key) as T
   } catch (err) {
-    console.error('获取数据失败:', err)
     return null
   }
 }
@@ -79,7 +78,7 @@ export function removeStorageSync(key: string): void {
   try {
     wx.removeStorageSync(key)
   } catch (err) {
-    console.error('删除数据失败:', err)
+    // 删除失败，静默处理
   }
 }
 
@@ -102,7 +101,7 @@ export function clearStorageSync(): void {
   try {
     wx.clearStorageSync()
   } catch (err) {
-    console.error('清空数据失败:', err)
+    // 清空失败，静默处理
   }
 }
 

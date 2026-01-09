@@ -272,7 +272,6 @@ Page({
       // 未完成任务：切换选中状态
       const newSelectedId = this.data.selectedTaskId === task.id ? '' : task.id
       const newSelectedTask = newSelectedId ? task : null
-      console.log('点击任务，选中ID:', newSelectedId, '任务状态:', task.status)
       this.setData({
         selectedTaskId: newSelectedId,
         selectedTask: newSelectedTask
@@ -445,17 +444,13 @@ Page({
     // 恢复指定任务
     const task = allTasks.find(t => t.id === taskId)
     if (!task) {
-      console.log('未找到任务:', taskId)
       return
     }
     
     // 允许恢复暂停或待开始的任务
     if (task.status !== TaskStatus.PAUSED && task.status !== TaskStatus.PENDING) {
-      console.log('任务状态不允许恢复:', task.status, task)
       return
     }
-    
-    console.log('准备恢复任务:', task)
     
     // 如果是第一次开始（PENDING状态），初始化timeSegments
     if (!task.timeSegments) {
@@ -468,8 +463,6 @@ Page({
       startTimestamp: now,
       updatedAt: now
     }
-    
-    console.log('恢复任务成功:', updatedTask)
 
     // 更新存储
     const updatedTasks = allTasks.map(t => {

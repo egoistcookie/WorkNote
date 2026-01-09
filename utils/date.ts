@@ -213,13 +213,11 @@ export function dateStringToTimestamp(dateStr: string): number {
  */
 export function timestampToDateString(timestamp: number): string {
   if (!timestamp || isNaN(timestamp) || timestamp <= 0) {
-    console.error('无效的时间戳:', timestamp)
     return formatDate(new Date())
   }
   const date = new Date(timestamp)
   // 验证日期是否有效
   if (isNaN(date.getTime())) {
-    console.error('无效的日期对象，时间戳:', timestamp)
     return formatDate(new Date())
   }
   return formatDate(date)

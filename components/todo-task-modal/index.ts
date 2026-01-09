@@ -1,6 +1,8 @@
 // components/todo-task-modal/index.ts
 import { TodoTask, TaskPriority } from '../../types/task'
 import { formatDate, dateStringToTimestamp, timestampToDateString } from '../../utils/date'
+import { getAllCategories, getCategoryColor, setAllCategories, DEFAULT_COLOR_OPTIONS } from '../../utils/category'
+import { getStorageSync, setStorageSync } from '../../utils/storage'
 
 Component({
   properties: {
@@ -29,7 +31,10 @@ Component({
     maxDateTimestamp: 0, // 时间戳，用于日期选择器
     startDateTimestamp: 0, // 时间戳，用于开始日期选择器
     endDateTimestamp: 0, // 时间戳，用于结束日期选择器
-    endDateMinTimestamp: 0 // 时间戳，结束日期选择器的最小日期
+    endDateMinTimestamp: 0, // 时间戳，结束日期选择器的最小日期
+    selectedColor: '#1989fa', // 选中的分类颜色
+    showColorPicker: false, // 是否显示颜色选择器
+    colorOptions: DEFAULT_COLOR_OPTIONS // 颜色选项
   },
 
   observers: {
@@ -59,6 +64,7 @@ Component({
       endDateTimestamp: todayTimestamp, // 初始化结束日期时间戳
       endDateMinTimestamp: todayTimestamp // 初始化结束日期最小时间戳
     })
+    // 注意：待办任务模态框不需要加载分类，因为待办任务的标题就是分类名称
   },
 
   methods: {
@@ -74,6 +80,12 @@ Component({
         const startTimestamp = dateStringToTimestamp(startDate)
         const endTimestamp = endDate ? dateStringToTimestamp(endDate) : startTimestamp
         
+        // 获取任务标题对应的分类颜色
+        let taskColor = '#1989fa'
+        if (task.title) {
+          taskColor = getCategoryColor(task.title)
+        }
+        
         this.setData({
           taskTitle: task.title || '',
           taskDescription: task.description || '',
@@ -81,7 +93,8 @@ Component({
           endDate: endDate,
           startDateTimestamp: startTimestamp,
           endDateTimestamp: endTimestamp,
-          endDateMinTimestamp: startTimestamp
+          endDateMinTimestamp: startTimestamp,
+          selectedColor: taskColor
         })
       } else {
         // 新建模式
@@ -92,7 +105,8 @@ Component({
           endDate: '',
           startDateTimestamp: todayTimestamp,
           endDateTimestamp: todayTimestamp,
-          endDateMinTimestamp: todayTimestamp
+          endDateMinTimestamp: todayTimestamp,
+          selectedColor: this.data.colorOptions[0]
         })
       }
     },
@@ -112,10 +126,6 @@ Component({
     onStartDateChange(e: WechatMiniprogram.CustomEvent) {
       // Vant datetime-picker 的 confirm 事件返回时间戳
       // 根据文档，可能是 e.detail 直接是时间戳，或者 e.detail.value
-      console.log('onStartDateChange 完整事件对象:', e)
-      console.log('e.detail:', e.detail)
-      console.log('e.detail.value:', e.detail?.value)
-      console.log('e.detail 类型:', typeof e.detail)
       
       // 尝试多种方式获取值
       let value: any
@@ -141,7 +151,6 @@ Component({
       }
       
       if (value === undefined || value === null) {
-        console.warn('开始日期选择器返回值为空，使用当前选择器的值')
         // 使用当前 startDateTimestamp 的值
         const currentTimestamp = this.data.startDateTimestamp
         if (currentTimestamp && currentTimestamp > 0) {
@@ -170,7 +179,6 @@ Component({
         // 如果是一个对象，尝试获取 value 属性
         timestamp = typeof value.value === 'number' ? value.value : dateStringToTimestamp(value.value)
       } else {
-        console.error('无效的日期值类型:', typeof value, value)
         this.setData({
           showStartDatePicker: false
         })
@@ -179,7 +187,6 @@ Component({
       
       // 验证时间戳是否有效
       if (isNaN(timestamp) || timestamp <= 0) {
-        console.error('无效的开始日期时间戳:', timestamp)
         this.setData({
           showStartDatePicker: false
         })
@@ -218,10 +225,6 @@ Component({
     onEndDateChange(e: WechatMiniprogram.CustomEvent) {
       // Vant datetime-picker 的 confirm 事件返回时间戳
       // 根据文档，可能是 e.detail 直接是时间戳，或者 e.detail.value
-      console.log('onEndDateChange 完整事件对象:', e)
-      console.log('e.detail:', e.detail)
-      console.log('e.detail.value:', e.detail?.value)
-      console.log('e.detail 类型:', typeof e.detail)
       
       // 尝试多种方式获取值
       let value: any
@@ -246,11 +249,8 @@ Component({
         value = e.detail
       }
       
-      console.log('onEndDateChange 接收到的值:', value, typeof value)
-      
       // 如果值为 undefined 或 null，使用当前选择器的值
       if (value === undefined || value === null) {
-        console.warn('日期选择器返回值为空，使用当前选择器的值')
         // 使用当前 endDateTimestamp 的值
         const currentTimestamp = this.data.endDateTimestamp
         if (currentTimestamp && currentTimestamp > 0) {
@@ -279,7 +279,6 @@ Component({
         // 如果是一个对象，尝试获取 value 属性
         timestamp = typeof value.value === 'number' ? value.value : dateStringToTimestamp(value.value)
       } else {
-        console.error('无效的日期值类型:', typeof value, value)
         this.setData({
           showEndDatePicker: false
         })
@@ -288,7 +287,6 @@ Component({
       
       // 验证时间戳是否有效
       if (isNaN(timestamp) || timestamp <= 0) {
-        console.error('无效的时间戳:', timestamp, '原始值:', value)
         // 如果时间戳无效，使用当前结束日期时间戳或开始日期时间戳
         const fallbackTimestamp = this.data.endDateTimestamp || this.data.startDateTimestamp || this.data.minDateTimestamp
         if (fallbackTimestamp && fallbackTimestamp > 0) {
@@ -307,12 +305,6 @@ Component({
       }
       
       const dateStr = timestampToDateString(timestamp)
-      
-      console.log('结束日期选择成功:', {
-        value,
-        timestamp,
-        dateStr
-      })
       
       this.setData({
         endDate: dateStr,
@@ -338,15 +330,6 @@ Component({
       const endTimestamp = endDate ? dateStringToTimestamp(endDate) : startTimestamp
       const endDateMinTimestamp = startTimestamp || todayTimestamp
       
-      console.log('点击结束日期:', {
-        startDate,
-        startTimestamp,
-        endDate,
-        endTimestamp,
-        endDateMinTimestamp,
-        maxDateTimestamp: this.data.maxDateTimestamp
-      })
-      
       this.setData({
         showEndDatePicker: true,
         endDateTimestamp: endTimestamp,
@@ -366,8 +349,28 @@ Component({
       })
     },
 
+    onColorTap() {
+      this.setData({
+        showColorPicker: true
+      })
+    },
+
+    onColorSelect(e: WechatMiniprogram.TouchEvent) {
+      const { color } = e.currentTarget.dataset
+      this.setData({
+        selectedColor: color,
+        showColorPicker: false
+      })
+    },
+
+    onColorPickerClose() {
+      this.setData({
+        showColorPicker: false
+      })
+    },
+
     onSave() {
-      const { taskTitle, taskDescription, startDate, endDate } = this.data
+      const { taskTitle, taskDescription, startDate, endDate, selectedColor } = this.data
       const task = this.properties.task
       const priority = this.properties.priority
 
@@ -379,6 +382,27 @@ Component({
         return
       }
 
+      // 待办任务的标题就是分类名称，自动创建/更新分类
+      const categoryName = taskTitle.trim()
+      const allCategories = getAllCategories()
+      const existingCategory = allCategories.find((cat: { name: string; color: string }) => cat.name === categoryName)
+      
+      if (!existingCategory) {
+        // 新建分类
+        const newCategory = {
+          name: categoryName,
+          color: selectedColor
+        }
+        const updatedCategories = [...allCategories, newCategory]
+        setAllCategories(updatedCategories)
+      } else if (existingCategory.color !== selectedColor) {
+        // 更新分类颜色
+        const updatedCategories = allCategories.map((cat: { name: string; color: string }) => 
+          cat.name === categoryName ? { ...cat, color: selectedColor } : cat
+        )
+        setAllCategories(updatedCategories)
+      }
+
       this.triggerEvent('save', {
         id: task?.id,
         title: taskTitle.trim(),
@@ -386,6 +410,8 @@ Component({
         priority: task?.priority || priority,
         startDate: startDate || undefined,
         endDate: endDate || undefined,
+        category: categoryName, // 分类名称就是任务标题
+        categoryColor: selectedColor, // 传递颜色信息
         isEdit: !!task
       })
     },
