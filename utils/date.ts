@@ -198,3 +198,30 @@ export function formatTimeFromTimestamp(timestamp: number): string {
   return formatTime(date)
 }
 
+/**
+ * 将日期字符串（YYYY-MM-DD）转换为时间戳
+ */
+export function dateStringToTimestamp(dateStr: string): number {
+  if (!dateStr) return Date.now()
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const date = new Date(year, month - 1, day)
+  return date.getTime()
+}
+
+/**
+ * 将时间戳转换为日期字符串（YYYY-MM-DD）
+ */
+export function timestampToDateString(timestamp: number): string {
+  if (!timestamp || isNaN(timestamp) || timestamp <= 0) {
+    console.error('无效的时间戳:', timestamp)
+    return formatDate(new Date())
+  }
+  const date = new Date(timestamp)
+  // 验证日期是否有效
+  if (isNaN(date.getTime())) {
+    console.error('无效的日期对象，时间戳:', timestamp)
+    return formatDate(new Date())
+  }
+  return formatDate(date)
+}
+

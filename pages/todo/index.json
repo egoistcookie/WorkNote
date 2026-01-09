@@ -1,5 +1,8 @@
 {
-  "navigationBarTitleText": "待办",
-  "usingComponents": {}
+  "navigationBarTitleText": "待办项",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "todo-task-item": "../../components/todo-task-item/index",
+    "todo-task-modal": "../../components/todo-task-modal/index"
+  }
 }
-

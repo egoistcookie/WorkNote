@@ -306,11 +306,11 @@ Page({
   },
 
   onResumeTask() {
-    // 恢复选中的任务（必须是暂停状态）
+    // 恢复选中的任务（可以是暂停或待开始状态）
     const selectedTask = this.data.selectedTask
-    if (!selectedTask || selectedTask.status !== TaskStatus.PAUSED) {
+    if (!selectedTask || (selectedTask.status !== TaskStatus.PAUSED && selectedTask.status !== TaskStatus.PENDING)) {
       wx.showToast({
-        title: '请选择暂停的任务',
+        title: '请选择暂停或待开始的任务',
         icon: 'none'
       })
       return

@@ -1,8 +1,90 @@
 <!--pages/todo/index.wxml-->
 <view class="todo-page">
-  <view class="page-content">
-    <text>待办页面</text>
-    <text class="hint">功能待开发</text>
-  </view>
-</view>
+  <!-- 四象限布局 -->
+  <view class="quadrants-container">
+    <!-- 第一象限：紧急&重要 -->
+    <view class="quadrant quadrant-1">
+      <view class="quadrant-header">
+        <text class="quadrant-title urgent-important">紧急&重要</text>
+        <view class="add-button" data-priority="urgent_important" bindtap="onAddTask">
+          <van-icon name="plus" size="20px" color="#ff6b6b" />
+        </view>
+      </view>
+      <view class="tasks-list">
+        <todo-task-item 
+          wx:for="{{urgentImportantTasks}}" 
+          wx:key="id"
+          task="{{item}}"
+          bind:tap="onTaskTap"
+          bind:toggle="onTaskToggle"
+        />
+      </view>
+    </view>
 
+    <!-- 第二象限：重要&不紧急 -->
+    <view class="quadrant quadrant-2">
+      <view class="quadrant-header">
+        <text class="quadrant-title important-not-urgent">重要&不紧急</text>
+        <view class="add-button" data-priority="important_not_urgent" bindtap="onAddTask">
+          <van-icon name="plus" size="20px" color="#ffa726" />
+        </view>
+      </view>
+      <view class="tasks-list">
+        <todo-task-item 
+          wx:for="{{importantNotUrgentTasks}}" 
+          wx:key="id"
+          task="{{item}}"
+          bind:tap="onTaskTap"
+          bind:toggle="onTaskToggle"
+        />
+      </view>
+    </view>
+
+    <!-- 第三象限：紧急&不重要 -->
+    <view class="quadrant quadrant-3">
+      <view class="quadrant-header">
+        <text class="quadrant-title urgent-not-important">紧急&不重要</text>
+        <view class="add-button" data-priority="urgent_not_important" bindtap="onAddTask">
+          <van-icon name="plus" size="20px" color="#42a5f5" />
+        </view>
+      </view>
+      <view class="tasks-list">
+        <todo-task-item 
+          wx:for="{{urgentNotImportantTasks}}" 
+          wx:key="id"
+          task="{{item}}"
+          bind:tap="onTaskTap"
+          bind:toggle="onTaskToggle"
+        />
+      </view>
+    </view>
+
+    <!-- 第四象限：不紧急&不重要 -->
+    <view class="quadrant quadrant-4">
+      <view class="quadrant-header">
+        <text class="quadrant-title not-urgent-not-important">不紧急&不重要</text>
+        <view class="add-button" data-priority="not_urgent_not_important" bindtap="onAddTask">
+          <van-icon name="plus" size="20px" color="#66bb6a" />
+        </view>
+      </view>
+      <view class="tasks-list">
+        <todo-task-item 
+          wx:for="{{notUrgentNotImportantTasks}}" 
+          wx:key="id"
+          task="{{item}}"
+          bind:tap="onTaskTap"
+          bind:toggle="onTaskToggle"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 任务添加/编辑弹窗 -->
+  <todo-task-modal
+    show="{{showTaskModal}}"
+    task="{{editingTask}}"
+    priority="{{currentPriority}}"
+    bind:close="onTaskModalClose"
+    bind:save="onTaskSave"
+  />
+</view>

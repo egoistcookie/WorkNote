@@ -1,0 +1,88 @@
+<!--components/todo-task-modal/index.wxml-->
+<van-popup
+  show="{{show}}"
+  position="bottom"
+  custom-style="height: 33%; border-radius: 20rpx 20rpx 0 0;"
+  bind:close="onClose"
+  closeable
+  close-icon-position="top-right"
+>
+  <view class="todo-task-modal">
+    <!-- 标题输入 -->
+    <view class="input-section">
+      <input
+        class="title-input"
+        value="{{taskTitle}}"
+        placeholder="准备做什么?"
+        bindinput="onTitleInput"
+        maxlength="100"
+        focus="{{show}}"
+      />
+    </view>
+
+    <!-- 描述输入 -->
+    <view class="input-section">
+      <textarea
+        class="description-input"
+        value="{{taskDescription}}"
+        placeholder="添加描述"
+        bindinput="onDescriptionInput"
+        maxlength="500"
+        auto-height
+      />
+    </view>
+
+    <!-- 底部操作栏 -->
+    <view class="action-bar">
+      <!-- 开始日期 -->
+      <view class="action-item" bindtap="onStartDateTap">
+        <van-icon name="calendar-o" size="20px" color="#1989fa" />
+        <text class="action-text">{{startDate || '开始日期'}}</text>
+      </view>
+
+      <!-- 结束日期 -->
+      <view class="action-item" bindtap="onEndDateTap">
+        <van-icon name="calendar-o" size="20px" color="#1989fa" />
+        <text class="action-text">{{endDate || '结束日期'}}</text>
+      </view>
+
+      <!-- 发送按钮 -->
+      <view class="send-button" bindtap="onSave">
+        <van-icon name="send" size="24px" color="#1989fa" />
+      </view>
+    </view>
+
+  </view>
+</van-popup>
+
+<!-- 日期选择器弹窗 -->
+<van-popup
+  show="{{showStartDatePicker}}"
+  position="bottom"
+  bind:close="onStartDateCancel"
+>
+  <van-datetime-picker
+    type="date"
+    value="{{startDateTimestamp}}"
+    min-date="{{minDateTimestamp}}"
+    max-date="{{maxDateTimestamp}}"
+    bind:confirm="onStartDateChange"
+    bind:cancel="onStartDateCancel"
+  />
+</van-popup>
+
+<van-popup
+  show="{{showEndDatePicker}}"
+  position="bottom"
+  bind:close="onEndDateCancel"
+>
+  <van-datetime-picker
+    type="date"
+    value="{{endDateTimestamp}}"
+    min-date="{{endDateMinTimestamp}}"
+    max-date="{{maxDateTimestamp}}"
+    bind:confirm="onEndDateChange"
+    bind:cancel="onEndDateCancel"
+  />
+</van-popup>
+

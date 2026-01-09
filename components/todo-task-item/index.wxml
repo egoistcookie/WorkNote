@@ -1,0 +1,29 @@
+<!--components/todo-task-item/index.wxml-->
+<view class="todo-task-item" bindtap="onTaskTap">
+  <view class="task-checkbox" catchtap="onCheckboxChange">
+    <view class="checkbox {{task.status === 'completed' ? 'checked' : ''}}">
+      <van-icon wx:if="{{task.status === 'completed'}}" name="checked" size="16px" color="#07c160" />
+    </view>
+  </view>
+  <view class="task-content">
+    <view class="task-title {{task.status === 'completed' ? 'completed' : ''}}">
+      {{task.title}}
+    </view>
+    <view wx:if="{{task.description}}" class="task-description">
+      {{task.description}}
+    </view>
+    <view class="task-meta">
+      <view wx:if="{{task.category}}" class="task-category">
+        <van-icon name="clock-o" size="12px" />
+        <text>{{task.category}}</text>
+      </view>
+      <view wx:if="{{task.duration}}" class="task-duration">
+        {{task.duration}}
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{task.status === 'in_progress'}}" class="play-icon">
+    <van-icon name="play" size="20px" color="#07c160" />
+  </view>
+</view>
+

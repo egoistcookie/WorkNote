@@ -43,9 +43,9 @@
       <van-icon name="pause" size="18px" />
       <text class="button-text">暂停</text>
     </van-button>
-    <!-- 选中任务是暂停状态时，显示开始按钮 -->
+    <!-- 选中任务是暂停或待开始状态时，显示开始按钮 -->
     <van-button 
-      wx:if="{{selectedTask.status === 'paused'}}"
+      wx:if="{{selectedTask.status === 'paused' || selectedTask.status === 'pending'}}"
       type="primary" 
       size="normal"
       custom-color="#07c160"
