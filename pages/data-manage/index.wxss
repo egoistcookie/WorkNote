@@ -47,3 +47,111 @@
   word-break: break-all;
 }
 
+/* 导入弹窗样式 */
+.import-popup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 30rpx;
+}
+
+.import-header {
+  margin-bottom: 30rpx;
+}
+
+.import-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #323233;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.import-tip {
+  font-size: 24rpx;
+  color: #969799;
+}
+
+.import-content {
+  flex: 1;
+  margin-bottom: 30rpx;
+}
+
+.import-textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 400rpx;
+  font-size: 24rpx;
+  color: #323233;
+  line-height: 1.6;
+  font-family: 'Courier New', monospace;
+  padding: 20rpx;
+  border: 1rpx solid #ebedf0;
+  border-radius: 8rpx;
+  background-color: #fafafa;
+}
+
+.import-result {
+  margin-bottom: 30rpx;
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+}
+
+.result-summary {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20rpx;
+}
+
+.result-item {
+  font-size: 24rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 4rpx;
+}
+
+.result-item.success {
+  color: #07c160;
+  background-color: #e8f8f0;
+}
+
+.result-item.skipped {
+  color: #ff9800;
+  background-color: #fff4e6;
+}
+
+.result-item.failed {
+  color: #ee0a24;
+  background-color: #fce8e8;
+}
+
+.result-details {
+  margin-top: 20rpx;
+}
+
+.details-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #323233;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.details-scroll {
+  max-height: 300rpx;
+}
+
+.detail-item {
+  font-size: 22rpx;
+  color: #646566;
+  padding: 8rpx 0;
+  line-height: 1.5;
+}
+
+.import-actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #ebedf0;
+}
+
