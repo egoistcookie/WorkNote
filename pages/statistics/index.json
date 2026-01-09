@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "统计",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "calendar": "../../components/calendar/index"
+  }
+}
+

@@ -1,0 +1,36 @@
+<!--pages/data-manage/index.wxml-->
+<view class="data-manage-page">
+  <view class="header">
+    <text class="title">数据管理</text>
+    <view class="actions">
+      <van-button 
+        type="primary" 
+        size="small" 
+        bindtap="onCopyText"
+        custom-style="width: 140rpx; margin-right: 20rpx;"
+      >
+        <van-icon name="copy" size="16px" />
+        <text class="button-text">复制文本</text>
+      </van-button>
+      <van-button 
+        type="success" 
+        size="small" 
+        bindtap="onExportFile"
+        custom-style="width: 140rpx;"
+      >
+        <van-icon name="down" size="16px" />
+        <text class="button-text">导出文件</text>
+      </van-button>
+    </view>
+  </view>
+
+  <view class="export-content">
+    <textarea 
+      class="export-textarea" 
+      value="{{exportText}}"
+      disabled
+      auto-height
+    />
+  </view>
+</view>
+

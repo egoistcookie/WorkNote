@@ -1,6 +1,7 @@
 // components/task-modal/index.ts
 import { Category, CategoryColor } from '../../types/common'
 import { Task } from '../../types/task'
+import { getAllCategories } from '../../utils/category'
 
 Component({
   properties: {
@@ -29,30 +30,20 @@ Component({
     ],
     isEditMode: false,
     taskId: '',
-    categories: [
-      // 第一行
-      { label: Category.ENTERTAINMENT, color: CategoryColor[Category.ENTERTAINMENT] },
-      { label: Category.ON_THE_ROAD, color: CategoryColor[Category.ON_THE_ROAD] },
-      { label: Category.EXERCISE, color: CategoryColor[Category.EXERCISE] },
-      { label: Category.HOUSEWORK, color: CategoryColor[Category.HOUSEWORK] },
-      { label: Category.REST, color: CategoryColor[Category.REST] },
-      { label: Category.NAP, color: CategoryColor[Category.NAP] },
-      // 第二行
-      { label: Category.SLEEP, color: CategoryColor[Category.SLEEP] },
-      { label: Category.WORK, color: CategoryColor[Category.WORK] },
-      { label: Category.SIDE_HUSTLE, color: CategoryColor[Category.SIDE_HUSTLE] },
-      { label: Category.MAIN_JOB, color: CategoryColor[Category.MAIN_JOB] },
-      { label: Category.DEVELOPMENT, color: CategoryColor[Category.DEVELOPMENT] },
-      { label: Category.ASSIST_TESTING, color: CategoryColor[Category.ASSIST_TESTING] },
-      // 第三行
-      { label: Category.DESIGN, color: CategoryColor[Category.DESIGN] },
-      { label: Category.TROUBLESHOOT_PRODUCTION, color: CategoryColor[Category.TROUBLESHOOT_PRODUCTION] },
-      { label: Category.FOLLOW_PROCESS, color: CategoryColor[Category.FOLLOW_PROCESS] },
-      { label: Category.STUDY, color: CategoryColor[Category.STUDY] },
-      { label: Category.LEARN_PROGRAMMING, color: CategoryColor[Category.LEARN_PROGRAMMING] },
-      { label: Category.EAT, color: CategoryColor[Category.EAT] }
-    ],
+    categories: [] as Array<{ label: string; color: string }>,
     elapsedSeconds: 0
+  },
+
+  attached() {
+    // 加载分类列表
+    this.loadCategories()
+  },
+
+  pageLifetimes: {
+    show() {
+      // 每次显示时重新加载分类（可能在其他页面修改了分类）
+      this.loadCategories()
+    }
   },
 
   observers: {
@@ -76,13 +67,27 @@ Component({
   },
 
   methods: {
+    loadCategories() {
+      const allCategories = getAllCategories()
+      const categories = allCategories.map(cat => ({
+        label: cat.name,
+        color: cat.color
+      }))
+      this.setData({
+        categories
+      })
+    },
+
     resetForm() {
       const now = new Date()
       const defaultTimeArray = [now.getHours(), now.getMinutes(), now.getSeconds()]
+      const allCategories = getAllCategories()
+      const defaultCategory = allCategories.length > 0 ? allCategories[0].name : Category.TROUBLESHOOT_PRODUCTION
+      
       this.setData({
         taskTitle: '',
         taskNote: '',
-        selectedCategory: Category.TROUBLESHOOT_PRODUCTION,
+        selectedCategory: defaultCategory as Category,
         startTime: '',
         endTime: '',
         startTimeArray: defaultTimeArray,

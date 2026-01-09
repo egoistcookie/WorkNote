@@ -2,9 +2,13 @@
   "pages": [
     "pages/timeline/index",
     "pages/todo/index",
-    "pages/other/index",
+    "pages/statistics/index",
     "pages/profile/index",
-    "pages/task-detail/index"
+    "pages/task-detail/index",
+    "pages/category-manage/index",
+    "pages/summary-manage/index",
+    "pages/todo-manage/index",
+    "pages/data-manage/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -28,8 +32,8 @@
         "text": "待办"
       },
       {
-        "pagePath": "pages/other/index",
-        "text": "其他"
+        "pagePath": "pages/statistics/index",
+        "text": "统计"
       },
       {
         "pagePath": "pages/profile/index",

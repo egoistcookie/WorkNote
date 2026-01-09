@@ -7,7 +7,7 @@
   
   <log-input
     type="morning"
-    title="晨间日志"
+    title="晨间计划"
     placeholder="点击记录今日计划..."
     icon="sunrise-o"
     value="{{morningLog}}"
@@ -97,7 +97,7 @@
   
   <log-input
     type="evening"
-    title="夜晚总结"
+    title="夜间总结"
     placeholder="点击记录今日总结..."
     icon="star-o"
     value="{{eveningLog}}"
@@ -116,5 +116,33 @@
     bind:save="onTaskSave"
     bind:delete="onTaskDelete"
   />
+
+  <!-- 日志编辑弹窗 -->
+  <van-popup 
+    show="{{showLogModal}}" 
+    position="bottom"
+    bind:close="onCancelLog"
+    custom-style="height: 50%; border-radius: 20rpx 20rpx 0 0;"
+  >
+    <view class="log-modal">
+      <view class="modal-header">
+        <text class="modal-title">{{logType === 'morning' ? '晨间计划' : '夜间总结'}}</text>
+        <view class="modal-actions">
+          <text class="modal-cancel" bindtap="onCancelLog">取消</text>
+          <text class="modal-confirm" bindtap="onSaveLog">确定</text>
+        </view>
+      </view>
+      <view class="modal-content">
+        <textarea 
+          class="log-textarea" 
+          value="{{logContent}}"
+          placeholder="{{logType === 'morning' ? '请输入晨间计划...' : '请输入夜间总结...'}}"
+          bindinput="onLogContentInput"
+          maxlength="500"
+          auto-height
+        />
+      </view>
+    </view>
+  </van-popup>
 </view>
 

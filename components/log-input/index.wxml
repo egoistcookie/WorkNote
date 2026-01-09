@@ -5,15 +5,10 @@
     <text class="log-title">{{title}}</text>
   </view>
   <view class="log-input-wrapper" bindtap="onTap">
-    <van-field
-      value="{{value}}"
-      placeholder="{{placeholder}}"
-      type="textarea"
-      autosize
-      border="{{false}}"
-      readonly
-      custom-class="log-field"
-    />
+    <view class="log-content">
+      <text class="log-text" wx:if="{{value}}">{{value}}</text>
+      <text class="log-placeholder" wx:else>{{placeholder}}</text>
+    </view>
     <view class="log-action">
       <van-icon name="arrow" size="16px" color="#969799" />
     </view>

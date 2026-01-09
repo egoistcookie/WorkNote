@@ -6,7 +6,8 @@
     "log-input": "../../components/log-input/index",
     "task-modal": "../../components/task-modal/index",
     "van-button": "@vant/weapp/button/index",
-    "van-icon": "@vant/weapp/icon/index"
+    "van-icon": "@vant/weapp/icon/index",
+    "van-popup": "@vant/weapp/popup/index"
   }
 }
 

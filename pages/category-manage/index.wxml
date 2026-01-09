@@ -1,0 +1,245 @@
+<!--pages/category-manage/index.wxml-->
+<view class="category-manage-page">
+  <view class="header">
+    <text class="title">分类管理</text>
+    <van-button 
+      type="primary" 
+      size="small" 
+      bindtap="onAddCategory"
+      custom-style="width: 140rpx;"
+    >
+      添加分类
+    </van-button>
+  </view>
+
+  <view class="category-list">
+    <view 
+      class="category-item" 
+      wx:for="{{categories}}" 
+      wx:key="index"
+    >
+      <view class="category-info">
+        <view 
+          class="category-color" 
+          style="background-color: {{item.color}};"
+        ></view>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+      <view class="category-actions">
+        <van-icon 
+          name="edit" 
+          size="18px" 
+          color="#1989fa" 
+          bindtap="onEditCategory"
+          data-index="{{index}}"
+        />
+        <van-icon 
+          name="delete-o" 
+          size="18px" 
+          color="#ee0a24" 
+          bindtap="onDeleteCategory"
+          data-index="{{index}}"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加/编辑分类弹窗 -->
+  <van-popup 
+    show="{{showAddModal}}" 
+    position="bottom"
+    bind:close="onCancelAdd"
+    custom-style="border-radius: 20rpx 20rpx 0 0;"
+  >
+    <view class="add-modal">
+      <view class="modal-header">
+        <text class="modal-title">{{editingIndex >= 0 ? '编辑分类' : '添加分类'}}</text>
+        <view class="modal-actions">
+          <text class="modal-cancel" bindtap="onCancelAdd">取消</text>
+          <text class="modal-confirm" bindtap="onSaveCategory">确定</text>
+        </view>
+      </view>
+      <view class="modal-content">
+        <view class="form-item">
+          <text class="form-label">分类名称</text>
+          <input 
+            class="form-input" 
+            type="text"
+            value="{{newCategoryName}}"
+            placeholder="请输入分类名称"
+            bindinput="onCategoryNameInput"
+            maxlength="10"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">分类颜色</text>
+          <view class="color-picker">
+            <view 
+              class="color-option {{newCategoryColor === '#1989fa' ? 'active' : ''}}"
+              style="background-color: #1989fa;"
+              data-color="#1989fa"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ff9800' ? 'active' : ''}}"
+              style="background-color: #ff9800;"
+              data-color="#ff9800"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#4caf50' ? 'active' : ''}}"
+              style="background-color: #4caf50;"
+              data-color="#4caf50"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#9c27b0' ? 'active' : ''}}"
+              style="background-color: #9c27b0;"
+              data-color="#9c27b0"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#f44336' ? 'active' : ''}}"
+              style="background-color: #f44336;"
+              data-color="#f44336"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#00bcd4' ? 'active' : ''}}"
+              style="background-color: #00bcd4;"
+              data-color="#00bcd4"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ffb3d9' ? 'active' : ''}}"
+              style="background-color: #ffb3d9;"
+              data-color="#ffb3d9"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#fff9c4' ? 'active' : ''}}"
+              style="background-color: #fff9c4;"
+              data-color="#fff9c4"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#b3d9ff' ? 'active' : ''}}"
+              style="background-color: #b3d9ff;"
+              data-color="#b3d9ff"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#c8e6c9' ? 'active' : ''}}"
+              style="background-color: #c8e6c9;"
+              data-color="#c8e6c9"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#9e9e9e' ? 'active' : ''}}"
+              style="background-color: #9e9e9e;"
+              data-color="#9e9e9e"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ff5722' ? 'active' : ''}}"
+              style="background-color: #ff5722;"
+              data-color="#ff5722"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#795548' ? 'active' : ''}}"
+              style="background-color: #795548;"
+              data-color="#795548"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#607d8b' ? 'active' : ''}}"
+              style="background-color: #607d8b;"
+              data-color="#607d8b"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#e91e63' ? 'active' : ''}}"
+              style="background-color: #e91e63;"
+              data-color="#e91e63"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#673ab7' ? 'active' : ''}}"
+              style="background-color: #673ab7;"
+              data-color="#673ab7"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#3f51b5' ? 'active' : ''}}"
+              style="background-color: #3f51b5;"
+              data-color="#3f51b5"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#009688' ? 'active' : ''}}"
+              style="background-color: #009688;"
+              data-color="#009688"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#8bc34a' ? 'active' : ''}}"
+              style="background-color: #8bc34a;"
+              data-color="#8bc34a"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ffc107' ? 'active' : ''}}"
+              style="background-color: #ffc107;"
+              data-color="#ffc107"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ff9800' ? 'active' : ''}}"
+              style="background-color: #ff9800;"
+              data-color="#ff9800"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ff6b6b' ? 'active' : ''}}"
+              style="background-color: #ff6b6b;"
+              data-color="#ff6b6b"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#4ecdc4' ? 'active' : ''}}"
+              style="background-color: #4ecdc4;"
+              data-color="#4ecdc4"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ffe66d' ? 'active' : ''}}"
+              style="background-color: #ffe66d;"
+              data-color="#ffe66d"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#a8e6cf' ? 'active' : ''}}"
+              style="background-color: #a8e6cf;"
+              data-color="#a8e6cf"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ffd3b6' ? 'active' : ''}}"
+              style="background-color: #ffd3b6;"
+              data-color="#ffd3b6"
+              bindtap="onColorChange"
+            ></view>
+            <view 
+              class="color-option {{newCategoryColor === '#ffaaa5' ? 'active' : ''}}"
+              style="background-color: #ffaaa5;"
+              data-color="#ffaaa5"
+              bindtap="onColorChange"
+            ></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </van-popup>
+</view>
+

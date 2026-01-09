@@ -33,7 +33,7 @@
       <view class="task-footer">
         <van-tag 
           type="primary" 
-          custom-color="{{categoryColorMap[task.category]}}"
+          custom-color="{{categoryColor}}"
           size="medium"
         >
           {{task.category}}

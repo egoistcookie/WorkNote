@@ -1,8 +1,97 @@
 <!--pages/profile/index.wxml-->
 <view class="profile-page">
-  <view class="page-content">
-    <text>个人页面</text>
-    <text class="hint">功能待开发</text>
+  <!-- 用户信息卡片 -->
+  <view class="profile-card">
+    <view class="profile-header">
+      <view class="avatar-section" bindtap="onAvatarTap">
+        <image 
+          class="avatar" 
+          src="{{avatar || '/assets/images/default-avatar.png'}}" 
+          mode="aspectFill"
+        />
+        <view class="avatar-edit-icon">
+          <van-icon name="photo-o" size="16px" color="#ffffff" />
+        </view>
+      </view>
+      
+      <view class="profile-info">
+        <view class="name-section" bindtap="onNameTap">
+          <text class="name">{{name}}</text>
+          <van-icon name="edit" size="16px" color="#969799" />
+        </view>
+        <view class="email-section" bindtap="onEmailTap">
+          <text class="email">{{email || '点击设置邮箱'}}</text>
+          <van-icon name="edit" size="14px" color="#969799" />
+        </view>
+      </view>
+    </view>
   </view>
-</view>
 
+  <!-- 统计信息 -->
+  <view class="stats-card">
+    <text class="stats-text">事件个数 {{eventCount}} | 记录天数 {{recordDays}}</text>
+  </view>
+
+  <!-- 管理功能列表 -->
+  <view class="menu-list">
+    <view class="menu-item" bindtap="onCategoryManage">
+      <view class="menu-icon category-icon">
+        <van-icon name="apps-o" size="20px" color="#1989fa" />
+      </view>
+      <text class="menu-text">分类管理</text>
+      <van-icon name="arrow" size="16px" color="#c8c9cc" />
+    </view>
+    
+    <view class="menu-item" bindtap="onSummaryManage">
+      <view class="menu-icon summary-icon">
+        <van-icon name="description" size="20px" color="#ff9800" />
+      </view>
+      <text class="menu-text">总结管理</text>
+      <van-icon name="arrow" size="16px" color="#c8c9cc" />
+    </view>
+    
+    <view class="menu-item" bindtap="onTodoManage">
+      <view class="menu-icon todo-icon">
+        <van-icon name="todo-list-o" size="20px" color="#4caf50" />
+      </view>
+      <text class="menu-text">待办管理</text>
+      <van-icon name="arrow" size="16px" color="#c8c9cc" />
+    </view>
+    
+    <view class="menu-item" bindtap="onDataManage">
+      <view class="menu-icon data-icon">
+        <van-icon name="setting-o" size="20px" color="#9c27b0" />
+      </view>
+      <text class="menu-text">数据管理</text>
+      <van-icon name="arrow" size="16px" color="#c8c9cc" />
+    </view>
+  </view>
+
+  <!-- 编辑弹窗 -->
+  <van-popup 
+    show="{{showEditModal}}" 
+    position="bottom"
+    bind:close="onEditCancel"
+    custom-style="border-radius: 20rpx 20rpx 0 0;"
+  >
+    <view class="edit-modal">
+      <view class="edit-header">
+        <text class="edit-title">{{editingField === 'name' ? '编辑名称' : '编辑邮箱'}}</text>
+        <view class="edit-actions">
+          <text class="edit-cancel" bindtap="onEditCancel">取消</text>
+          <text class="edit-confirm" bindtap="onEditConfirm">确定</text>
+        </view>
+      </view>
+      <view class="edit-content">
+        <input 
+          class="edit-input" 
+          type="{{editingField === 'email' ? 'text' : 'text'}}"
+          value="{{editValue}}"
+          placeholder="{{editingField === 'name' ? '请输入名称' : '请输入邮箱'}}"
+          bindinput="onEditInput"
+          focus
+        />
+      </view>
+    </view>
+  </van-popup>
+</view>

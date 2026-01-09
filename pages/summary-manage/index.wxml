@@ -1,0 +1,107 @@
+<!--pages/summary-manage/index.wxml-->
+<view class="summary-manage-page">
+  <view class="header">
+    <text class="title">总结管理</text>
+    <view class="add-buttons">
+      <van-button 
+        type="primary" 
+        size="small" 
+        bindtap="onAddLog"
+        data-type="morning"
+        custom-style="width: 140rpx; margin-right: 20rpx;"
+      >
+        添加晨间计划
+      </van-button>
+      <van-button 
+        type="warning" 
+        size="small" 
+        bindtap="onAddLog"
+        data-type="evening"
+        custom-style="width: 140rpx;"
+      >
+        添加夜间总结
+      </van-button>
+    </view>
+  </view>
+
+  <view class="log-list">
+    <view 
+      class="log-item" 
+      wx:for="{{logs}}" 
+      wx:key="id"
+    >
+      <view class="log-header">
+        <view class="log-type-badge {{item.type === 'morning' ? 'morning' : 'evening'}}">
+          <text class="log-type-text">{{item.type === 'morning' ? '晨间计划' : '夜间总结'}}</text>
+        </view>
+        <text class="log-date">{{item.date}}</text>
+      </view>
+      <view class="log-content">{{item.content}}</view>
+      <view class="log-actions">
+        <van-icon 
+          name="edit" 
+          size="18px" 
+          color="#1989fa" 
+          bindtap="onEditLog"
+          data-log="{{item}}"
+        />
+        <van-icon 
+          name="delete-o" 
+          size="18px" 
+          color="#ee0a24" 
+          bindtap="onDeleteLog"
+          data-log="{{item}}"
+        />
+      </view>
+    </view>
+    
+    <view class="empty-state" wx:if="{{logs.length === 0}}">
+      <van-icon name="info-o" size="48px" color="#c8c9cc" />
+      <text class="empty-text">暂无总结记录</text>
+    </view>
+  </view>
+
+  <!-- 编辑日志弹窗 -->
+  <van-popup 
+    show="{{showLogModal}}" 
+    position="bottom"
+    bind:close="onCancelLog"
+    custom-style="border-radius: 20rpx 20rpx 0 0;"
+  >
+    <view class="log-modal">
+      <view class="modal-header">
+        <text class="modal-title">{{editingLog ? '编辑' : '添加'}}{{logType === 'morning' ? '晨间计划' : '夜间总结'}}</text>
+        <view class="modal-actions">
+          <text class="modal-cancel" bindtap="onCancelLog">取消</text>
+          <text class="modal-confirm" bindtap="onSaveLog">确定</text>
+        </view>
+      </view>
+      <view class="modal-content">
+        <view class="date-picker-section">
+          <text class="date-label">日期</text>
+          <picker 
+            mode="date" 
+            value="{{selectedDate}}"
+            bindchange="onDatePickerChange"
+            start="2020-01-01"
+            end="2099-12-31"
+          >
+            <view class="date-picker">
+              <text class="date-text">{{selectedDate}}</text>
+              <van-icon name="arrow-down" size="16px" color="#969799" />
+            </view>
+          </picker>
+        </view>
+        <textarea 
+          class="log-textarea" 
+          value="{{logContent}}"
+          placeholder="{{logType === 'morning' ? '请输入晨间计划...' : '请输入夜间总结...'}}"
+          bindinput="onLogContentInput"
+          maxlength="500"
+          auto-height
+        />
+      </view>
+    </view>
+  </van-popup>
+</view>
+

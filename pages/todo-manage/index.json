@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "待办管理",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "van-dialog": "@vant/weapp/dialog/index"
+  }
+}
+

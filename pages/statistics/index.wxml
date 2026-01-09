@@ -1,0 +1,56 @@
+<!--pages/statistics/index.wxml-->
+<view class="statistics-page">
+  <calendar 
+    selectedDate="{{selectedDate}}"
+    bind:datechange="onDateChange"
+  />
+  
+  <!-- 总时长汇总 -->
+  <view class="summary-section">
+    <view class="summary-header">
+      <van-icon name="clock-o" size="18px" color="#1989fa" />
+      <text class="summary-title">总时长汇总</text>
+    </view>
+    
+    <!-- 圆形图 -->
+    <view class="chart-container">
+      <canvas 
+        type="2d" 
+        id="chart-canvas" 
+        class="chart-canvas"
+        bindtouchstart="onChartTap"
+      ></canvas>
+    </view>
+  </view>
+  
+  <!-- 详细统计列表 -->
+  <view class="stats-list" wx:if="{{categoryStats.length > 0}}">
+    <view 
+      class="stat-item" 
+      wx:for="{{categoryStats}}" 
+      wx:key="category"
+    >
+      <view class="stat-left">
+        <view class="stat-color" style="background-color: {{item.color}};"></view>
+        <text class="stat-category">{{item.category}}</text>
+      </view>
+      <view class="stat-right">
+        <text class="stat-duration">{{item.totalDurationText}}</text>
+        <text class="stat-count">{{item.count}}条</text>
+      </view>
+      <view class="stat-progress-bar">
+        <view 
+          class="stat-progress" 
+          style="width: {{item.percentage}}%; background-color: {{item.color}};"
+        ></view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <van-icon name="info-o" size="48px" color="#c8c9cc" />
+    <text class="empty-text">暂无统计数据</text>
+  </view>
+</view>
+

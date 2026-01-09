@@ -16,7 +16,11 @@ Page({
     currentTask: null as Task | null,
     selectedTaskId: '' as string,
     selectedTask: null as Task | null,
-    timerInterval: null as number | null
+    timerInterval: null as number | null,
+    showLogModal: false,
+    logType: 'morning' as 'morning' | 'evening',
+    logContent: '',
+    editingLogDate: ''
   },
 
   onLoad() {
@@ -108,10 +112,15 @@ Page({
   },
 
   loadLogs(date: string) {
-    // 后续从存储获取
+    // 从存储获取日志
+    const morningKey = `log_morning_${date}`
+    const eveningKey = `log_evening_${date}`
+    const morningLog = getStorageSync<string>(morningKey) || ''
+    const eveningLog = getStorageSync<string>(eveningKey) || ''
+    
     this.setData({
-      morningLog: '',
-      eveningLog: ''
+      morningLog,
+      eveningLog
     })
   },
 
@@ -180,13 +189,70 @@ Page({
   },
 
   onMorningLogTap() {
-    // 后续跳转到编辑页面
-    console.log('编辑晨间日志')
+    const { selectedDate, morningLog } = this.data
+    this.setData({
+      showLogModal: true,
+      logType: 'morning',
+      logContent: morningLog,
+      editingLogDate: selectedDate
+    })
   },
 
   onEveningLogTap() {
-    // 后续跳转到编辑页面
-    console.log('编辑夜晚总结')
+    const { selectedDate, eveningLog } = this.data
+    this.setData({
+      showLogModal: true,
+      logType: 'evening',
+      logContent: eveningLog,
+      editingLogDate: selectedDate
+    })
+  },
+
+  onLogContentInput(e: WechatMiniprogram.Input) {
+    this.setData({
+      logContent: e.detail.value
+    })
+  },
+
+  onSaveLog() {
+    const { logContent, logType, editingLogDate, selectedDate } = this.data
+    
+    if (!logContent.trim()) {
+      wx.showToast({
+        title: '请输入内容',
+        icon: 'none'
+      })
+      return
+    }
+
+    const date = editingLogDate || selectedDate
+    const logKey = `log_${logType}_${date}`
+    
+    setStorageSync(logKey, logContent)
+    
+    // 如果保存的是当前选中日期的日志，更新显示并重新加载日志
+    if (date === selectedDate) {
+      this.loadLogs(selectedDate)
+    }
+    
+    wx.showToast({
+      title: '保存成功',
+      icon: 'success'
+    })
+    
+    this.setData({
+      showLogModal: false,
+      logContent: '',
+      editingLogDate: ''
+    })
+  },
+
+  onCancelLog() {
+    this.setData({
+      showLogModal: false,
+      logContent: '',
+      editingLogDate: ''
+    })
   },
 
   onTaskTap(e: WechatMiniprogram.CustomEvent) {
