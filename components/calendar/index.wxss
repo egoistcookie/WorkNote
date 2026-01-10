@@ -28,22 +28,6 @@
   color: #323233;
 }
 
-.header-actions {
-  display: flex;
-  gap: 20rpx;
-  align-items: center;
-}
-
-.action-btn {
-  width: 60rpx;
-  height: 60rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  border: 1rpx solid #ebedf0;
-  border-radius: 8rpx;
-}
 
 .calendar-week {
   display: flex;

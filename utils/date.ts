@@ -17,9 +17,44 @@ export function formatDate(date: Date): string {
  * 格式化日期为 MM月DD日
  */
 export function formatDateChinese(date: Date): string {
-  const month = date.getMonth() + 1
+  // 验证日期对象是否有效
+  if (!date) {
+    console.error('formatDateChinese: date is null or undefined')
+    const today = new Date()
+    const month = today.getMonth() + 1
+    const day = today.getDate()
+    return `${month}月${day}日`
+  }
+  
+  // 检查 Date 对象是否有效
+  if (isNaN(date.getTime())) {
+    console.error('formatDateChinese: invalid date object:', date)
+    const today = new Date()
+    const month = today.getMonth() + 1
+    const day = today.getDate()
+    return `${month}月${day}日`
+  }
+  
+  // 获取月份和日期，并验证它们是否有效
+  const month = date.getMonth()
   const day = date.getDate()
-  return `${month}月${day}日`
+  
+  // 检查 getMonth() 和 getDate() 是否返回 NaN
+  if (isNaN(month) || isNaN(day)) {
+    console.error('formatDateChinese: getMonth() or getDate() returned NaN:', {
+      date,
+      time: date.getTime(),
+      month,
+      day,
+      year: date.getFullYear()
+    })
+    const today = new Date()
+    const fallbackMonth = today.getMonth() + 1
+    const fallbackDay = today.getDate()
+    return `${fallbackMonth}月${fallbackDay}日`
+  }
+  
+  return `${month + 1}月${day}日`
 }
 
 /**

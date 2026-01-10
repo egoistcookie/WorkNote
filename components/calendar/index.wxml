@@ -5,17 +5,6 @@
       <text class="date-text">{{dateText}}</text>
       <van-icon name="calendar-o" size="16px" />
     </view>
-    <view class="header-actions">
-      <view class="action-btn">
-        <van-icon name="apps-o" size="18px" />
-      </view>
-      <view class="action-btn">
-        <van-icon name="search" size="18px" />
-      </view>
-      <view class="action-btn">
-        <van-icon name="ellipsis" size="18px" />
-      </view>
-    </view>
   </view>
   
   <view class="calendar-week">
@@ -32,4 +21,24 @@
     </view>
   </view>
 </view>
+
+<!-- 日期选择器弹窗 -->
+<van-popup
+  show="{{showDatePicker}}"
+  position="bottom"
+  bind:close="onDatePickerClose"
+  custom-style="border-radius: 20rpx 20rpx 0 0;"
+>
+  <van-datetime-picker
+    id="datePicker"
+    type="date"
+    value="{{currentDate}}"
+    min-date="{{minDate}}"
+    max-date="{{maxDate}}"
+    show-toolbar
+    title="选择日期"
+    bind:confirm="onDatePickerConfirmFromComponent"
+    bind:cancel="onDatePickerClose"
+  />
+</van-popup>
 

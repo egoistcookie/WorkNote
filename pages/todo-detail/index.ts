@@ -54,8 +54,10 @@ Page({
     // 先显示待办任务列表，耗时统计异步加载
     this.setData({
       tasks: categoryTasks.sort((a, b) => b.createdAt - a.createdAt), // 按创建时间倒序
+      timelineTasks: [], // 初始化为空数组
       totalDuration: 0,
       totalDurationText: '计算中...',
+      taskCount: 0,
       taskCountText: '计算中...' // 初始显示计算中，异步计算后更新
     })
 
@@ -127,39 +129,31 @@ Page({
       
       processedDays = endIndex
       
-      // 每次批次都更新统计信息（实时反馈）
+      // 每次批次都更新统计信息和任务列表（实时反馈）
       const totalDurationText = formatDurationWithSeconds(totalSeconds)
+      
+      // 按日期和创建时间倒序排序（使用副本避免修改原数组）
+      const sortedTasks = allTimelineTasks.slice().sort((a, b) => {
+        // 先按日期倒序
+        if (a.date !== b.date) {
+          return b.date.localeCompare(a.date)
+        }
+        // 同一天按创建时间倒序
+        return (b.createdAt || 0) - (a.createdAt || 0)
+      })
+      
+      // 每次批次完成后都更新，实现增量显示
       this.setData({
         totalDuration: totalSeconds,
         totalDurationText,
         taskCount,
-        taskCountText: taskCount.toString()
+        taskCountText: taskCount.toString(),
+        timelineTasks: sortedTasks // 每次批次都更新任务列表
       })
       
       // 如果还有数据，继续处理下一批
       if (processedDays < totalDays) {
         setTimeout(processBatch, 50) // 50ms后处理下一批
-      } else {
-        // 所有批次处理完成，最后更新任务列表
-        // 按日期和创建时间倒序排序（使用副本避免修改原数组）
-        const sortedTasks = allTimelineTasks.slice().sort((a, b) => {
-          // 先按日期倒序
-          if (a.date !== b.date) {
-            return b.date.localeCompare(a.date)
-          }
-          // 同一天按创建时间倒序
-          return (b.createdAt || 0) - (a.createdAt || 0)
-        })
-        
-        // 最终更新任务列表和统计信息
-        const finalTotalDurationText = formatDurationWithSeconds(totalSeconds)
-        this.setData({
-          totalDuration: totalSeconds,
-          totalDurationText: finalTotalDurationText,
-          taskCount,
-          taskCountText: taskCount.toString(),
-          timelineTasks: sortedTasks
-        })
       }
     }
     
