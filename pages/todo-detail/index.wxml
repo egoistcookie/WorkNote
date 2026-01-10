@@ -5,13 +5,55 @@
     <view class="stats-card">
       <view class="stats-label">累积耗时</view>
       <view class="stats-value">{{totalDurationText}}</view>
-      <view class="stats-count">共 {{tasks.length}} 个任务</view>
+      <view class="stats-count">共 {{taskCountText}} 个任务</view>
     </view>
   </view>
 
-  <!-- 任务列表 -->
+  <!-- 时间线任务列表 -->
   <view class="tasks-section">
-    <view class="section-title">任务列表</view>
+    <view class="section-title">时间线任务</view>
+    <view class="task-list">
+      <view
+        wx:for="{{timelineTasks}}"
+        wx:key="id"
+        class="task-item timeline-task-item {{item.status === 'completed' ? 'completed' : ''}}"
+      >
+        <view class="task-header">
+          <text class="task-title">{{item.title}}</text>
+        </view>
+        
+        <view class="task-description" wx:if="{{item.description}}">
+          {{item.description}}
+        </view>
+        
+        <view class="task-meta">
+          <view class="task-info">
+            <text class="task-date">{{item.date}}</text>
+            <text class="task-time" wx:if="{{item.startTime}}">
+              {{item.startTime}}<text wx:if="{{item.endTime}}"> - {{item.endTime}}</text>
+            </text>
+          </view>
+          <view class="task-duration" wx:if="{{item.durationText}}">
+            {{item.durationText}}
+          </view>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:if="{{timelineTasks.length === 0 && taskCountText !== '计算中...'}}">
+        <van-icon name="info-o" size="48px" color="#c8c9cc" />
+        <text class="empty-text">该分类下暂无时间线任务</text>
+      </view>
+      
+      <view class="empty-state" wx:if="{{taskCountText === '计算中...'}}">
+        <van-icon name="info-o" size="48px" color="#c8c9cc" />
+        <text class="empty-text">正在加载任务...</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 待办任务列表 -->
+  <view class="tasks-section" wx:if="{{tasks.length > 0}}">
+    <view class="section-title">待办任务</view>
     <view class="task-list">
       <view
         wx:for="{{tasks}}"
@@ -47,11 +89,6 @@
             {{item.duration}}
           </view>
         </view>
-      </view>
-      
-      <view class="empty-state" wx:if="{{tasks.length === 0}}">
-        <van-icon name="info-o" size="48px" color="#c8c9cc" />
-        <text class="empty-text">该分类下暂无任务</text>
       </view>
     </view>
   </view>

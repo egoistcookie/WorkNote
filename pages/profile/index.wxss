@@ -33,6 +33,13 @@
   background-color: #ebedf0;
 }
 
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ebedf0;
+}
+
 .avatar-edit-icon {
   position: absolute;
   bottom: 0;

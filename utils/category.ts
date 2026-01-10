@@ -7,11 +7,12 @@ export interface CategoryItem {
   color: string
 }
 
-// 默认颜色选项
+// 默认颜色选项（已去重）
 export const DEFAULT_COLOR_OPTIONS = [
   '#1989fa', '#07c160', '#ff9800', '#ee0a24', '#9c27b0', '#00bcd4', '#ffc107', '#e91e63', '#607d8b', '#795548',
-  '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50',
-  '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#607d8b', '#9e9e9e', '#424242'
+  '#f44336', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#009688', '#4caf50',
+  '#8bc34a', '#cddc39', '#ffeb3b', '#ff5722', '#9e9e9e', '#424242',
+  '#ffb3d9', '#ffe66d', '#fff9c4', '#b3d9ff', '#c8e6c9', '#4ecdc4', '#ff6b6b', '#a8e6cf', '#ffd3b6', '#ffaaa5'
 ]
 
 /**

@@ -5,10 +5,17 @@
     <view class="profile-header">
       <view class="avatar-section" bindtap="onAvatarTap">
         <image 
+          wx:if="{{avatar}}"
           class="avatar" 
-          src="{{avatar || '/assets/images/default-avatar.png'}}" 
+          src="{{avatar}}" 
           mode="aspectFill"
         />
+        <view 
+          wx:else
+          class="avatar avatar-placeholder"
+        >
+          <van-icon name="user-o" size="40px" color="#969799" />
+        </view>
         <view class="avatar-edit-icon">
           <van-icon name="photo-o" size="16px" color="#ffffff" />
         </view>

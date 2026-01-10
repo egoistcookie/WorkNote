@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "导入数据",
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}
+

@@ -22,12 +22,17 @@ Page({
 
   onLoad() {
     this.loadProfile()
-    this.loadStatistics()
+    // 异步加载统计数据，避免阻塞 onLoad 生命周期
+    setTimeout(() => {
+      this.loadStatistics()
+    }, 0)
   },
 
   onShow() {
-    // 每次显示页面时重新加载统计数据
-    this.loadStatistics()
+    // 异步重新加载统计数据，避免阻塞 onShow 生命周期
+    setTimeout(() => {
+      this.loadStatistics()
+    }, 0)
   },
 
   loadProfile() {

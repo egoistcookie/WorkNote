@@ -16,7 +16,7 @@
     <view 
       class="category-item" 
       wx:for="{{categories}}" 
-      wx:key="index"
+      wx:key="name"
     >
       <view class="category-info">
         <view 

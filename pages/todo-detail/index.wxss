@@ -129,6 +129,12 @@
   color: #969799;
 }
 
+.task-time {
+  font-size: 24rpx;
+  color: #969799;
+  margin-left: 12rpx;
+}
+
 .task-duration {
   font-size: 24rpx;
   color: #1989fa;

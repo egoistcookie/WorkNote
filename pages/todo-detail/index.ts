@@ -8,9 +8,12 @@ Page({
   data: {
     category: '',
     categoryColor: '#969799',
-    tasks: [] as TodoTask[],
+    tasks: [] as TodoTask[], // 待办任务
+    timelineTasks: [] as any[], // 时间线任务
     totalDuration: 0,
-    totalDurationText: '0秒'
+    totalDurationText: '0秒',
+    taskCount: 0, // 时间线任务的数量
+    taskCountText: '0' // 用于显示的文本
   },
 
   onLoad(options: { category?: string }) {
@@ -52,7 +55,8 @@ Page({
     this.setData({
       tasks: categoryTasks.sort((a, b) => b.createdAt - a.createdAt), // 按创建时间倒序
       totalDuration: 0,
-      totalDurationText: '计算中...'
+      totalDurationText: '计算中...',
+      taskCountText: '计算中...' // 初始显示计算中，异步计算后更新
     })
 
     // 异步计算耗时统计，避免阻塞主线程
@@ -62,16 +66,19 @@ Page({
   },
 
   calculateTotalDuration(category: string) {
-    // 从时间线任务中统计该分类的累积耗时
+    // 从时间线任务中统计该分类的累积耗时和任务数量
     let totalSeconds = 0
+    let taskCount = 0
+    const allTimelineTasks: any[] = [] // 收集所有时间线任务
     const today = new Date()
     
     // 遍历最近365天的数据，分批处理避免卡顿
     const batchSize = 30 // 每次处理30天
     let processedDays = 0
+    const totalDays = 365
     
     const processBatch = () => {
-      const endIndex = Math.min(processedDays + batchSize, 365)
+      const endIndex = Math.min(processedDays + batchSize, totalDays)
       
       for (let i = processedDays; i < endIndex; i++) {
         const date = new Date(today)
@@ -85,33 +92,74 @@ Page({
         
         timelineTasks.forEach((task: any) => {
           if (task.category === category) {
-            // 优先使用 elapsedSeconds
+            // 统计任务数量
+            taskCount++
+            
+            // 计算任务的时长（秒）
+            let taskSeconds = 0
             if (task.elapsedSeconds) {
-              totalSeconds += task.elapsedSeconds
-            } 
-            // 如果有时间段，计算总时长
-            else if (task.timeSegments && task.timeSegments.length > 0) {
-              const taskSeconds = task.timeSegments.reduce((sum: number, seg: any) => {
+              taskSeconds = task.elapsedSeconds
+            } else if (task.timeSegments && task.timeSegments.length > 0) {
+              taskSeconds = task.timeSegments.reduce((sum: number, seg: any) => {
                 return sum + (seg.duration || 0)
               }, 0)
-              totalSeconds += taskSeconds
             }
+            
+            // 累加总时长
+            totalSeconds += taskSeconds
+            
+            // 格式化时长文本
+            let durationText = task.duration || ''
+            if (!durationText && taskSeconds > 0) {
+              durationText = formatDurationWithSeconds(taskSeconds)
+            }
+            
+            // 收集任务，确保有唯一ID
+            allTimelineTasks.push({
+              ...task,
+              id: task.id || `task_${dateStr}_${allTimelineTasks.length}`, // 确保有ID
+              date: dateStr, // 确保日期字段存在
+              durationText: durationText // 添加格式化的时长文本
+            })
           }
         })
       }
       
       processedDays = endIndex
       
-      // 更新进度
+      // 每次批次都更新统计信息（实时反馈）
       const totalDurationText = formatDurationWithSeconds(totalSeconds)
       this.setData({
         totalDuration: totalSeconds,
-        totalDurationText
+        totalDurationText,
+        taskCount,
+        taskCountText: taskCount.toString()
       })
       
       // 如果还有数据，继续处理下一批
-      if (processedDays < 365) {
+      if (processedDays < totalDays) {
         setTimeout(processBatch, 50) // 50ms后处理下一批
+      } else {
+        // 所有批次处理完成，最后更新任务列表
+        // 按日期和创建时间倒序排序（使用副本避免修改原数组）
+        const sortedTasks = allTimelineTasks.slice().sort((a, b) => {
+          // 先按日期倒序
+          if (a.date !== b.date) {
+            return b.date.localeCompare(a.date)
+          }
+          // 同一天按创建时间倒序
+          return (b.createdAt || 0) - (a.createdAt || 0)
+        })
+        
+        // 最终更新任务列表和统计信息
+        const finalTotalDurationText = formatDurationWithSeconds(totalSeconds)
+        this.setData({
+          totalDuration: totalSeconds,
+          totalDurationText: finalTotalDurationText,
+          taskCount,
+          taskCountText: taskCount.toString(),
+          timelineTasks: sortedTasks
+        })
       }
     }
     

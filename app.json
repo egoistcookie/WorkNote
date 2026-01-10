@@ -9,7 +9,8 @@
     "pages/summary-manage/index",
     "pages/todo-manage/index",
     "pages/data-manage/index",
-    "pages/todo-detail/index"
+    "pages/todo-detail/index",
+    "pages/import-data/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

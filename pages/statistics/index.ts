@@ -1,8 +1,9 @@
 // pages/statistics/index.ts
 import { getCurrentDate, formatDate, getSecondsDiff, formatDurationWithSeconds } from '../../utils/date'
 import { Task, TaskStatus } from '../../types/task'
-import { Category, CategoryColor } from '../../types/common'
+import { Category } from '../../types/common'
 import { getStorageSync } from '../../utils/storage'
+import { getCategoryColor } from '../../utils/category'
 
 interface CategoryStat {
   category: Category
@@ -113,7 +114,7 @@ Page({
         totalDurationText: formatDurationWithSeconds(stat.totalSeconds),
         count: stat.count,
         percentage: totalSeconds > 0 ? (stat.totalSeconds / totalSeconds) * 100 : 0,
-        color: CategoryColor[category] || '#969799'
+        color: getCategoryColor(category) // 使用分类的实际颜色
       }))
       .sort((a, b) => b.totalSeconds - a.totalSeconds) // 按时长降序排列
     

@@ -107,7 +107,7 @@
     <view class="color-grid">
       <view
         wx:for="{{colorOptions}}"
-        wx:key="*this"
+        wx:key="index"
         class="color-item {{selectedColor === item ? 'selected' : ''}}"
         style="background-color: {{item}}"
         data-color="{{item}}"

@@ -1,0 +1,66 @@
+<!--pages/import-data/index.wxml-->
+<view class="import-page">
+  <view class="import-header">
+    <text class="import-title">导入数据</text>
+    <text class="import-tip">请粘贴导出的文本内容</text>
+    
+    <!-- 导入和取消按钮 -->
+    <view class="import-actions-header">
+      <van-button 
+        type="default" 
+        size="small" 
+        bindtap="onCancel"
+        custom-style="width: 140rpx; margin-right: 20rpx;"
+      >
+        取消
+      </van-button>
+      <van-button 
+        type="primary" 
+        size="small" 
+        bindtap="onImportConfirm"
+        disabled="{{isImporting}}"
+        loading="{{isImporting}}"
+        custom-style="width: 140rpx;"
+      >
+        {{isImporting ? '导入中' : '导入'}}
+      </van-button>
+    </view>
+
+    <!-- 进度条 -->
+    <view class="progress-container" wx:if="{{isImporting || importProgress > 0}}">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{importProgress}}%"></view>
+      </view>
+      <text class="progress-text">{{importProgressText}}</text>
+    </view>
+  </view>
+  
+  <view class="import-content">
+    <textarea 
+      class="import-textarea" 
+      value="{{importText}}"
+      bindinput="onImportTextChange"
+      placeholder="请粘贴导出的文本内容..."
+      disabled="{{isImporting}}"
+      auto-height
+      maxlength="-1"
+    />
+  </view>
+
+  <view class="import-result" wx:if="{{importResult.success > 0 || importResult.skipped > 0 || importResult.failed > 0}}">
+    <view class="result-summary">
+      <text class="result-item success">成功: {{importResult.success}}</text>
+      <text class="result-item skipped">跳过: {{importResult.skipped}}</text>
+      <text class="result-item failed">失败: {{importResult.failed}}</text>
+    </view>
+    <view class="result-details" wx:if="{{importResult.details.length > 0}}">
+      <text class="details-title">详情:</text>
+      <scroll-view class="details-scroll" scroll-y>
+        <view class="detail-item" wx:for="{{importResult.details}}" wx:key="index">
+          {{item}}
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>
+
