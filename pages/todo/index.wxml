@@ -88,6 +88,7 @@
     show="{{showTaskModal}}"
     task="{{editingTask}}"
     priority="{{currentPriority}}"
+    theme="{{theme}}"
     bind:close="onTaskModalClose"
     bind:save="onTaskSave"
   />

@@ -632,18 +632,7 @@ Page({
       const title = match[2].trim()
       const description = match[3] ? match[3].trim() : ''
 
-      // 检查是否已存在（通过标题和日期判断）
-      const tasksKey = `tasks_${date}`
-      const existingTasks = getStorageSync<Task[]>(tasksKey) || []
-      const isDuplicate = existingTasks.some(t => 
-        t.title === title && t.date === date && t.category === category
-      )
-
-      if (isDuplicate) {
-        return { success: false, skipped: true, title }
-      }
-
-      // 解析状态、时间等信息（从所有行中查找）
+      // 解析状态、时间等信息（从所有行中查找），需要在判重之前解析时间段
       const fullText = lines.join(' ')
       const statusMatch = fullText.match(/状态:\s*([^|]+)/)
       const statusText = statusMatch ? statusMatch[1].trim() : '待开始'
@@ -654,6 +643,22 @@ Page({
 
       const endTimeMatch = fullText.match(/结束:\s*(\d{2}:\d{2})/)
       const endTime = endTimeMatch ? endTimeMatch[1] : undefined
+
+      // 检查是否已存在（通过标题、日期、分类和时间段判断）
+      const tasksKey = `tasks_${date}`
+      const existingTasks = getStorageSync<Task[]>(tasksKey) || []
+      const isDuplicate = existingTasks.some(t => {
+        const sameTitle = t.title === title
+        const sameDate = t.date === date
+        const sameCategory = t.category === category
+        const sameStartTime = (t.startTime || '00:00') === startTime
+        const sameEndTime = (t.endTime || undefined) === (endTime || undefined)
+        return sameTitle && sameDate && sameCategory && sameStartTime && sameEndTime
+      })
+
+      if (isDuplicate) {
+        return { success: false, skipped: true, title }
+      }
 
       const now = Date.now()
       const newTask: Task = {
@@ -786,16 +791,29 @@ Page({
         return { success: false, skipped: false, title: '' }
       }
 
-      // 解析第一行: "1. [优先级] 标题 - 描述"
+      // 解析第一行: "1. [优先级] 标题 - 描述"（只匹配"空格-空格"作为分隔符）
       const firstLine = lines[0]
-      const match = firstLine.match(/^\d+\.\s*\[([^\]]+)\]\s*(.+?)(?:\s*-\s*(.+))?$/)
-      if (!match) {
-        return { success: false, skipped: false, title: '' }
+      // 先尝试匹配有"空格-空格"分隔符的情况
+      let match = firstLine.match(/^\d+\.\s*\[([^\]]+)\]\s*(.+?)\s+-\s+(.+)$/)
+      let priorityText: string
+      let title: string
+      let description: string
+      
+      if (match) {
+        // 匹配成功：有"空格-空格"分隔符
+        priorityText = match[1].trim()
+        title = match[2].trim()
+        description = match[3].trim()
+      } else {
+        // 匹配失败：没有"空格-空格"分隔符，全部作为标题
+        match = firstLine.match(/^\d+\.\s*\[([^\]]+)\]\s*(.+)$/)
+        if (!match) {
+          return { success: false, skipped: false, title: '' }
+        }
+        priorityText = match[1].trim()
+        title = match[2].trim()
+        description = ''
       }
-
-      const priorityText = match[1].trim()
-      const title = match[2].trim()
-      const description = match[3] ? match[3].trim() : ''
 
       // 检查是否已存在（通过标题判断）
       const existingTasks = getStorageSync<TodoTask[]>('todo_tasks') || []

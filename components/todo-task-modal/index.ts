@@ -3,6 +3,7 @@ import { TodoTask, TaskPriority } from '../../types/task'
 import { formatDate, dateStringToTimestamp, timestampToDateString } from '../../utils/date'
 import { getAllCategories, getCategoryColor, setAllCategories, DEFAULT_COLOR_OPTIONS } from '../../utils/category'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Component({
   properties: {
@@ -17,6 +18,10 @@ Component({
     priority: {
       type: String,
       value: TaskPriority.URGENT_IMPORTANT
+    },
+    theme: {
+      type: String,
+      value: 'warm' as ThemeType
     }
   },
 
@@ -34,10 +39,26 @@ Component({
     endDateMinTimestamp: 0, // 时间戳，结束日期选择器的最小日期
     selectedColor: '#1989fa', // 选中的分类颜色
     showColorPicker: false, // 是否显示颜色选择器
-    colorOptions: DEFAULT_COLOR_OPTIONS // 颜色选项
+    colorOptions: DEFAULT_COLOR_OPTIONS, // 颜色选项
+    themeColors: null as ThemeColors | null
+  },
+
+  lifetimes: {
+    attached() {
+      // 初始化主题
+      const theme = this.properties.theme || getCurrentTheme()
+      const themeColors = getThemeColors(theme)
+      this.setData({ themeColors })
+    }
   },
 
   observers: {
+    'theme': function(theme: ThemeType) {
+      if (theme) {
+        const themeColors = getThemeColors(theme)
+        this.setData({ themeColors })
+      }
+    },
     show(show) {
       if (show) {
         this.initForm()

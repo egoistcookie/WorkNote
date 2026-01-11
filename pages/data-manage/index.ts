@@ -2,7 +2,7 @@
 import { Task, TaskStatus, TaskPriority } from '../../types/task'
 import { TodoTask } from '../../types/task'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
-import { formatDate, formatDurationWithSeconds } from '../../utils/date'
+import { formatDate, formatDurationWithSeconds, formatTimeWithSeconds } from '../../utils/date'
 import { getAllCategories, setAllCategories, CategoryItem } from '../../utils/category'
 import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
@@ -54,16 +54,51 @@ Page({
             duration = task.duration
           }
           
+          // 获取精确到秒的开始和结束时间
+          let startTimeText = task.startTime || ''
+          let endTimeText = task.endTime || ''
+          
+          // 如果有时段数据，从时间戳中提取精确时间
+          if (task.timeSegments && task.timeSegments.length > 0) {
+            // 使用第一个时间段的开始时间戳
+            const firstSegment = task.timeSegments[0]
+            if (firstSegment.startTimestamp) {
+              startTimeText = formatTimeWithSeconds(new Date(firstSegment.startTimestamp))
+            }
+            // 使用最后一个时间段的结束时间戳
+            const lastSegment = task.timeSegments[task.timeSegments.length - 1]
+            if (lastSegment.endTimestamp) {
+              endTimeText = formatTimeWithSeconds(new Date(lastSegment.endTimestamp))
+            }
+          } else if (task.createdAt && task.updatedAt) {
+            // 如果没有时段数据，使用创建和更新时间作为参考
+            // 但只有当 startTime 和 endTime 都不存在时才使用
+            if (!task.startTime && task.createdAt) {
+              startTimeText = formatTimeWithSeconds(new Date(task.createdAt))
+            }
+            if (!task.endTime && task.updatedAt && task.status === TaskStatus.COMPLETED) {
+              endTimeText = formatTimeWithSeconds(new Date(task.updatedAt))
+            }
+          }
+          
+          // 如果时间格式是 HH:mm，补充秒数（:00）
+          if (startTimeText && startTimeText.match(/^\d{2}:\d{2}$/)) {
+            startTimeText += ':00'
+          }
+          if (endTimeText && endTimeText.match(/^\d{2}:\d{2}$/)) {
+            endTimeText += ':00'
+          }
+          
           text += `${index + 1}. [${task.category}] ${task.title}`
           if (task.description) {
             text += ` - ${task.description}`
           }
           text += `\n   状态: ${this.getStatusText(task.status)}`
-          if (task.startTime) {
-            text += ` | 开始: ${task.startTime}`
+          if (startTimeText) {
+            text += ` | 开始: ${startTimeText}`
           }
-          if (task.endTime) {
-            text += ` | 结束: ${task.endTime}`
+          if (endTimeText) {
+            text += ` | 结束: ${endTimeText}`
           }
           if (duration) {
             text += ` | 时长: ${duration}`

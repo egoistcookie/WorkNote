@@ -30,15 +30,14 @@ Component({
     currentDate: new Date().getTime(),
     minDate: new Date(2020, 0, 1).getTime(),
     maxDate: new Date(2099, 11, 31).getTime(),
-    theme: 'warm' as ThemeType,
     themeColors: null as ThemeColors | null
   },
 
   lifetimes: {
     attached() {
-      const theme = getCurrentTheme()
+      const theme = this.properties.theme || getCurrentTheme()
       const themeColors = getThemeColors(theme)
-      this.setData({ theme, themeColors })
+      this.setData({ themeColors })
       this.initCalendar()
     }
   },

@@ -49,8 +49,8 @@
   },
   "miniprogramRoot": "./",
   "compileType": "miniprogram",
-  "libVersion": "3.13.1",
-  "appid": "wx3bd9a4090f72de42",
+  "libVersion": "3.12.1",
+  "appid": "wxbcc5dd2e5eec502e",
   "projectname": "WorkNote",
   "condition": {},
   "editorSetting": {

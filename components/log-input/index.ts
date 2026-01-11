@@ -31,16 +31,15 @@ Component({
 
   data: {
     iconColor: '#F6C12C',
-    theme: 'warm' as ThemeType,
     themeColors: null as ThemeColors | null
   },
 
   lifetimes: {
     attached() {
-      const theme = getCurrentTheme()
+      const theme = this.properties.theme || getCurrentTheme()
       const themeColors = getThemeColors(theme)
       this.updateIconColor(theme)
-      this.setData({ theme, themeColors })
+      this.setData({ themeColors })
     }
   },
 
@@ -53,7 +52,7 @@ Component({
       }
     },
     'type': function(type: string) {
-      const theme = this.data.theme || getCurrentTheme()
+      const theme = this.properties.theme || getCurrentTheme()
       this.updateIconColor(theme)
     }
   },

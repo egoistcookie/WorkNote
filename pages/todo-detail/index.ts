@@ -2,7 +2,7 @@
 import { TodoTask, TaskStatus } from '../../types/task'
 import { getStorageSync } from '../../utils/storage'
 import { getCategoryColor } from '../../utils/category'
-import { formatDurationWithSeconds, getCurrentDate } from '../../utils/date'
+import { formatDurationWithSeconds, getCurrentDate, parseTimeToTimestamp, getSecondsDiff } from '../../utils/date'
 import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
@@ -118,12 +118,21 @@ Page({
             
             // 计算任务的时长（秒）
             let taskSeconds = 0
-            if (task.elapsedSeconds) {
-              taskSeconds = task.elapsedSeconds
-            } else if (task.timeSegments && task.timeSegments.length > 0) {
+            if (task.timeSegments && task.timeSegments.length > 0) {
+              // 使用时间段计算
               taskSeconds = task.timeSegments.reduce((sum: number, seg: any) => {
                 return sum + (seg.duration || 0)
               }, 0)
+            } else if (task.elapsedSeconds) {
+              // 使用已用秒数
+              taskSeconds = task.elapsedSeconds
+            } else if (task.startTime && task.endTime) {
+              // 使用起止时间计算（用于导入的任务）
+              const startTimestamp = parseTimeToTimestamp(dateStr, task.startTime)
+              const endTimestamp = parseTimeToTimestamp(dateStr, task.endTime)
+              if (startTimestamp && endTimestamp) {
+                taskSeconds = getSecondsDiff(startTimestamp, endTimestamp)
+              }
             }
             
             // 累加总时长

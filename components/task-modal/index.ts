@@ -37,7 +37,6 @@ Component({
     taskId: '',
     categories: [] as Array<{ label: string; color: string }>,
     elapsedSeconds: 0,
-    theme: 'warm' as ThemeType,
     themeColors: null as ThemeColors | null
   },
 
@@ -46,7 +45,7 @@ Component({
       // 初始化主题
       const theme = this.properties.theme || getCurrentTheme()
       const themeColors = getThemeColors(theme)
-      this.setData({ theme, themeColors })
+      this.setData({ themeColors })
       
       // 组件挂载时加载分类列表
       // 注意：在 attached 中调用 methods 需要使用 setTimeout 确保 methods 已初始化

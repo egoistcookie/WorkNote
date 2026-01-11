@@ -2,12 +2,12 @@
 <van-popup
   show="{{show}}"
   position="bottom"
-  custom-style="height: 33%; border-radius: 20rpx 20rpx 0 0; background-color: #F7EBD5;"
+  custom-style="height: 33%; border-radius: 20rpx 20rpx 0 0; background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
   bind:close="onClose"
   closeable
   close-icon-position="top-right"
 >
-  <view class="todo-task-modal">
+  <view class="todo-task-modal theme-{{theme}}">
     <!-- 标题输入 -->
     <view class="input-section">
       <input
@@ -36,13 +36,13 @@
     <view class="action-bar">
       <!-- 开始日期 -->
       <view class="action-item" bindtap="onStartDateTap">
-        <van-icon name="calendar-o" size="20px" color="#B22A2A" />
+        <van-icon name="calendar-o" size="20px" color="{{themeColors ? themeColors.darkAccent : '#B22A2A'}}" />
         <text class="action-text">{{startDate || '开始日期'}}</text>
       </view>
 
       <!-- 结束日期 -->
       <view class="action-item" bindtap="onEndDateTap">
-        <van-icon name="calendar-o" size="20px" color="#B22A2A" />
+        <van-icon name="calendar-o" size="20px" color="{{themeColors ? themeColors.darkAccent : '#B22A2A'}}" />
         <text class="action-text">{{endDate || '结束日期'}}</text>
       </view>
 
@@ -66,9 +66,9 @@
   show="{{showStartDatePicker}}"
   position="bottom"
   bind:close="onStartDateCancel"
-  custom-style="background-color: #F7EBD5; border-radius: 20rpx 20rpx 0 0;"
+  custom-style="background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}}; border-radius: 20rpx 20rpx 0 0;"
 >
-  <view class="date-picker-wrapper">
+  <view class="date-picker-wrapper theme-{{theme}}">
     <van-datetime-picker
       type="date"
       value="{{startDateTimestamp}}"
@@ -78,7 +78,7 @@
       bind:cancel="onStartDateCancel"
       show-toolbar
       title="选择开始日期"
-      custom-style="background-color: #F7EBD5;"
+      custom-style="background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
     />
   </view>
 </van-popup>
@@ -87,9 +87,9 @@
   show="{{showEndDatePicker}}"
   position="bottom"
   bind:close="onEndDateCancel"
-  custom-style="background-color: #F7EBD5; border-radius: 20rpx 20rpx 0 0;"
+  custom-style="background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}}; border-radius: 20rpx 20rpx 0 0;"
 >
-  <view class="date-picker-wrapper">
+  <view class="date-picker-wrapper theme-{{theme}}">
     <van-datetime-picker
       type="date"
       value="{{endDateTimestamp}}"
@@ -99,7 +99,7 @@
       bind:cancel="onEndDateCancel"
       show-toolbar
       title="选择结束日期"
-      custom-style="background-color: #F7EBD5;"
+      custom-style="background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
     />
   </view>
 </van-popup>
@@ -109,12 +109,12 @@
   show="{{showColorPicker}}"
   position="bottom"
   bind:close="onColorPickerClose"
-  custom-style="height: 50%; border-radius: 20rpx 20rpx 0 0; background-color: #F7EBD5;"
+  custom-style="height: 50%; border-radius: 20rpx 20rpx 0 0; background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
 >
-  <view class="color-picker">
+  <view class="color-picker theme-{{theme}}">
     <view class="picker-header">
       <text class="picker-title">选择颜色</text>
-      <van-icon name="cross" size="20px" color="#B22A2A" bindtap="onColorPickerClose" />
+      <van-icon name="cross" size="20px" color="{{themeColors ? themeColors.darkAccent : '#B22A2A'}}" bindtap="onColorPickerClose" />
     </view>
     <view class="color-grid">
       <view
