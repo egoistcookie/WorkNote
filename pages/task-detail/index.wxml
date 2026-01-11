@@ -1,5 +1,5 @@
 <!--pages/task-detail/index.wxml-->
-<view class="task-detail-page">
+<view class="task-detail-page theme-{{theme}}">
   <view class="task-info-card">
     <!-- 任务标题 -->
     <view class="info-section">

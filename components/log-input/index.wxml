@@ -1,5 +1,5 @@
 <!--components/log-input/index.wxml-->
-<view class="log-input-container">
+<view class="log-input-container theme-{{theme}}">
   <view class="log-header">
     <van-icon name="{{icon}}" size="20px" color="{{iconColor}}" />
     <text class="log-title">{{title}}</text>

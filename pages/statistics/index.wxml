@@ -1,7 +1,8 @@
 <!--pages/statistics/index.wxml-->
-<view class="statistics-page">
+<view class="statistics-page theme-{{theme}}">
   <calendar 
     selectedDate="{{selectedDate}}"
+    theme="{{theme}}"
     bind:datechange="onDateChange"
   />
   

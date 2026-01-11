@@ -1,5 +1,5 @@
 <!--pages/import-data/index.wxml-->
-<view class="import-page">
+<view class="import-page theme-{{theme}}">
   <view class="import-header">
     <text class="import-title">导入数据</text>
     <text class="import-tip">请粘贴导出的文本内容</text>

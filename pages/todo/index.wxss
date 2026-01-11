@@ -1,9 +1,16 @@
 /* pages/todo/index.wxss */
 .todo-page {
   min-height: 100vh;
-  background-color: #ffffff;
   padding: 20rpx;
   box-sizing: border-box;
+}
+
+.todo-page.theme-warm {
+  background-color: #F0DEBF;
+}
+
+.todo-page.theme-cool {
+  background-color: #9ac8ec;
 }
 
 .quadrants-container {
@@ -14,14 +21,30 @@
   height: calc(100vh - 120rpx);
 }
 
+.theme-warm .quadrant {
+  background: linear-gradient(135deg, #F0DEBF 0%, #F7EBD5 100%);
+  border: 2rpx solid rgba(246, 193, 44, 0.3);
+}
+
+.theme-cool .quadrant {
+  background: linear-gradient(135deg, #9ac8ec 0%, #e4e9ec 100%);
+  border: 2rpx solid rgba(89, 139, 176, 0.3);
+}
+
 .quadrant {
-  background-color: #ffffff;
-  border: 2rpx solid #f0f0f0;
   border-radius: 16rpx;
   padding: 24rpx;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.theme-warm .quadrant-header {
+  border-bottom: 1rpx solid rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .quadrant-header {
+  border-bottom: 1rpx solid rgba(89, 139, 176, 0.2);
 }
 
 .quadrant-header {
@@ -30,7 +53,6 @@
   align-items: center;
   margin-bottom: 20rpx;
   padding-bottom: 16rpx;
-  border-bottom: 1rpx solid #f0f0f0;
 }
 
 .quadrant-title {
@@ -38,20 +60,26 @@
   font-weight: 600;
 }
 
-.urgent-important {
-  color: #ff6b6b;
+.theme-warm .urgent-important,
+.theme-warm .important-not-urgent,
+.theme-warm .urgent-not-important,
+.theme-warm .not-urgent-not-important {
+  color: #B22A2A;
 }
 
-.important-not-urgent {
-  color: #ffa726;
+.theme-cool .urgent-important,
+.theme-cool .important-not-urgent,
+.theme-cool .urgent-not-important,
+.theme-cool .not-urgent-not-important {
+  color: #234369;
 }
 
-.urgent-not-important {
-  color: #42a5f5;
+.theme-warm .add-button {
+  background-color: #F6C12C;
 }
 
-.not-urgent-not-important {
-  color: #66bb6a;
+.theme-cool .add-button {
+  background-color: #598bb0;
 }
 
 .add-button {
@@ -61,7 +89,6 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: #f5f5f5;
 }
 
 .tasks-list {

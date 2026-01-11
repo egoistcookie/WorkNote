@@ -1,5 +1,5 @@
 <!--pages/category-manage/index.wxml-->
-<view class="category-manage-page">
+<view class="category-manage-page theme-{{theme}}">
   <view class="header">
     <text class="title">分类管理</text>
     <van-button 

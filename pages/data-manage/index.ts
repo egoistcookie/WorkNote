@@ -4,13 +4,19 @@ import { TodoTask } from '../../types/task'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
 import { formatDate, formatDurationWithSeconds } from '../../utils/date'
 import { getAllCategories, setAllCategories, CategoryItem } from '../../utils/category'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
-    exportText: ''
+    exportText: '',
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
     this.generateExportText()
   },
 
@@ -187,9 +193,19 @@ Page({
   },
 
   onShow() {
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
     // 异步重新生成导出文本（导入后可能新增了数据），避免阻塞 onShow 生命周期
     setTimeout(() => {
       this.generateExportText()
     }, 0)
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   }
 })

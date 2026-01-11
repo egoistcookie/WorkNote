@@ -1,23 +1,48 @@
 /* pages/task-detail/index.wxss */
 .task-detail-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
   padding: 30rpx;
   padding-bottom: 120rpx;
 }
 
+.task-detail-page.theme-warm {
+  background-color: #F0DEBF;
+}
+
+.task-detail-page.theme-cool {
+  background-color: #9ac8ec;
+}
+
+.theme-warm .task-info-card {
+  background: linear-gradient(135deg, #F0DEBF 0%, #F7EBD5 100%);
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+  box-shadow: 0 2rpx 8rpx rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .task-info-card {
+  background: linear-gradient(135deg, #9ac8ec 0%, #e4e9ec 100%);
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+  box-shadow: 0 2rpx 8rpx rgba(89, 139, 176, 0.2);
+}
+
 .task-info-card {
-  background: #fff;
   border-radius: 16rpx;
   padding: 40rpx 30rpx;
   margin-bottom: 30rpx;
+}
+
+.theme-warm .info-section {
+  border-bottom: 1rpx solid rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .info-section {
+  border-bottom: 1rpx solid rgba(89, 139, 176, 0.2);
 }
 
 .info-section {
   display: flex;
   align-items: center;
   padding: 24rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
 }
 
 .info-section:last-child {
@@ -31,9 +56,16 @@
   flex-shrink: 0;
 }
 
+.theme-warm .section-value {
+  color: #B22A2A;
+}
+
+.theme-cool .section-value {
+  color: #234369;
+}
+
 .section-value {
   font-size: 28rpx;
-  color: #323233;
   flex: 1;
   word-break: break-all;
 }
@@ -42,13 +74,30 @@
   flex: 1;
 }
 
+.theme-warm .time-picker {
+  color: #B22A2A;
+}
+
+.theme-cool .time-picker {
+  color: #234369;
+}
+
 .time-picker {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 28rpx;
-  color: #323233;
   padding: 12rpx 0;
+}
+
+.theme-warm .save-button-wrapper {
+  background-color: #F7EBD5;
+  box-shadow: 0 -2rpx 10rpx rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .save-button-wrapper {
+  background-color: #e4e9ec;
+  box-shadow: 0 -2rpx 10rpx rgba(89, 139, 176, 0.2);
 }
 
 .save-button-wrapper {
@@ -57,7 +106,12 @@
   left: 0;
   right: 0;
   padding: 30rpx;
-  background-color: #fff;
-  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
 }
 
+.theme-warm .save-button-wrapper van-button {
+  background-color: #B22A2A;
+}
+
+.theme-cool .save-button-wrapper van-button {
+  background-color: #234369;
+}

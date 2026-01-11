@@ -1,8 +1,42 @@
 /* pages/timeline/index.wxss */
 .timeline-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
   padding-bottom: 200rpx;
+  position: relative;
+}
+
+/* 主题切换按钮 */
+.theme-toggle-btn {
+  position: fixed;
+  top: 20rpx;
+  right: 30rpx;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+/* 暖色调主题 */
+.timeline-page.theme-warm {
+  background-color: #F0DEBF;
+}
+
+.timeline-page.theme-warm .section-title {
+  color: #B22A2A;
+}
+
+/* 冷色调主题 */
+.timeline-page.theme-cool {
+  background-color: #9ac8ec;
+}
+
+.timeline-page.theme-cool .section-title {
+  color: #234369;
 }
 
 .tasks-section {
@@ -17,9 +51,18 @@
 
 .section-title {
   font-size: 28rpx;
-  color: #999;
   margin-bottom: 20rpx;
   font-weight: 500;
+}
+
+/* 暖色调主题下的 section-title */
+.theme-warm .section-title {
+  color: #B22A2A;
+}
+
+/* 冷色调主题下的 section-title */
+.theme-cool .section-title {
+  color: #234369;
 }
 
 .start-button-wrapper {
@@ -52,10 +95,49 @@
   min-width: 140rpx;
 }
 
+/* 暂停按钮样式 - 无边框，背景色完全填充 */
+.theme-warm .pause-btn {
+  background-color: #B22A2A !important;
+}
+
+.theme-cool .pause-btn {
+  background-color: #234369 !important;
+}
+
 .pause-btn {
-  background-color: #ffffff !important;
-  border: 1rpx solid #ebedf0 !important;
-  color: #323233 !important;
+  border: none !important;
+  position: relative !important;
+}
+
+/* 移除微信小程序button默认的::after伪元素边框 */
+.pause-btn::after {
+  border: none !important;
+  background-color: transparent !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* 覆盖van-button内部的button元素 - 移除所有边框 */
+.pause-btn button {
+  background-color: #B22A2A !important;
+  border: none !important;
+}
+
+.pause-btn button::after {
+  border: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background-color: transparent !important;
+}
+
+.theme-warm .fab {
+  background-color: #B22A2A;
+  box-shadow: 0 4rpx 12rpx rgba(178, 42, 42, 0.3);
+}
+
+.theme-cool .fab {
+  background-color: #234369;
+  box-shadow: 0 4rpx 12rpx rgba(35, 67, 105, 0.3);
 }
 
 .fab {
@@ -65,17 +147,22 @@
   width: 100rpx;
   height: 100rpx;
   border-radius: 50%;
-  background-color: #1989fa;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
   z-index: 999;
+}
+
+.theme-warm .log-modal {
+  background-color: #F7EBD5;
+}
+
+.theme-cool .log-modal {
+  background-color: #e4e9ec;
 }
 
 .log-modal {
   padding: 40rpx 30rpx;
-  background-color: #ffffff;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -88,10 +175,17 @@
   margin-bottom: 40rpx;
 }
 
+.theme-warm .modal-title {
+  color: #B22A2A;
+}
+
+.theme-cool .modal-title {
+  color: #234369;
+}
+
 .modal-title {
   font-size: 32rpx;
   font-weight: 500;
-  color: #323233;
 }
 
 .modal-actions {
@@ -109,8 +203,15 @@
   color: #969799;
 }
 
+.theme-warm .modal-confirm {
+  color: #B22A2A;
+}
+
+.theme-cool .modal-confirm {
+  color: #234369;
+}
+
 .modal-confirm {
-  color: #1989fa;
   font-weight: 500;
 }
 
@@ -120,15 +221,25 @@
   flex-direction: column;
 }
 
+.theme-warm .log-textarea {
+  background-color: #F0DEBF;
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+  color: #B22A2A;
+}
+
+.theme-cool .log-textarea {
+  background-color: #9ac8ec;
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+  color: #234369;
+}
+
 .log-textarea {
   flex: 1;
   width: 100%;
   min-height: 300rpx;
   padding: 24rpx;
-  background-color: #f7f8fa;
   border-radius: 8rpx;
   font-size: 28rpx;
-  color: #323233;
   line-height: 1.6;
 }
 

@@ -1,5 +1,5 @@
 <!--pages/todo/index.wxml-->
-<view class="todo-page">
+<view class="todo-page theme-{{theme}}">
   <!-- 四象限布局 -->
   <view class="quadrants-container">
     <!-- 第一象限：紧急&重要 -->
@@ -7,7 +7,7 @@
       <view class="quadrant-header">
         <text class="quadrant-title urgent-important">紧急&重要</text>
         <view class="add-button" data-priority="urgent_important" bindtap="onAddTask">
-          <van-icon name="plus" size="20px" color="#ff6b6b" />
+          <van-icon name="plus" size="20px" color="#ffffff" />
         </view>
       </view>
       <view class="tasks-list">
@@ -15,6 +15,7 @@
           wx:for="{{urgentImportantTasks}}" 
           wx:key="id"
           task="{{item}}"
+          theme="{{theme}}"
           bind:tap="onTaskTap"
           bind:toggle="onTaskToggle"
         />
@@ -26,7 +27,7 @@
       <view class="quadrant-header">
         <text class="quadrant-title important-not-urgent">重要&不紧急</text>
         <view class="add-button" data-priority="important_not_urgent" bindtap="onAddTask">
-          <van-icon name="plus" size="20px" color="#ffa726" />
+          <van-icon name="plus" size="20px" color="#ffffff" />
         </view>
       </view>
       <view class="tasks-list">
@@ -34,6 +35,7 @@
           wx:for="{{importantNotUrgentTasks}}" 
           wx:key="id"
           task="{{item}}"
+          theme="{{theme}}"
           bind:tap="onTaskTap"
           bind:toggle="onTaskToggle"
         />
@@ -45,7 +47,7 @@
       <view class="quadrant-header">
         <text class="quadrant-title urgent-not-important">紧急&不重要</text>
         <view class="add-button" data-priority="urgent_not_important" bindtap="onAddTask">
-          <van-icon name="plus" size="20px" color="#42a5f5" />
+          <van-icon name="plus" size="20px" color="#ffffff" />
         </view>
       </view>
       <view class="tasks-list">
@@ -53,6 +55,7 @@
           wx:for="{{urgentNotImportantTasks}}" 
           wx:key="id"
           task="{{item}}"
+          theme="{{theme}}"
           bind:tap="onTaskTap"
           bind:toggle="onTaskToggle"
         />
@@ -64,7 +67,7 @@
       <view class="quadrant-header">
         <text class="quadrant-title not-urgent-not-important">不紧急&不重要</text>
         <view class="add-button" data-priority="not_urgent_not_important" bindtap="onAddTask">
-          <van-icon name="plus" size="20px" color="#66bb6a" />
+          <van-icon name="plus" size="20px" color="#ffffff" />
         </view>
       </view>
       <view class="tasks-list">
@@ -72,6 +75,7 @@
           wx:for="{{notUrgentNotImportantTasks}}" 
           wx:key="id"
           task="{{item}}"
+          theme="{{theme}}"
           bind:tap="onTaskTap"
           bind:toggle="onTaskToggle"
         />

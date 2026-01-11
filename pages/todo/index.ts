@@ -1,6 +1,7 @@
 // pages/todo/index.ts
 import { TodoTask, TaskPriority, TaskStatus } from '../../types/task'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
@@ -10,16 +11,31 @@ Page({
     notUrgentNotImportantTasks: [] as TodoTask[],
     showTaskModal: false,
     currentPriority: TaskPriority.URGENT_IMPORTANT,
-    editingTask: null as TodoTask | null
+    editingTask: null as TodoTask | null,
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
     this.loadTasks()
   },
 
   onShow() {
-    // 每次显示页面时重新加载任务
+    // 每次显示页面时检查主题并重新加载任务
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
     this.loadTasks()
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   loadTasks() {

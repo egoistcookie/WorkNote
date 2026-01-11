@@ -1,6 +1,7 @@
 // pages/category-manage/index.ts
 import { Category, CategoryColor } from '../../types/common'
 import { getAllCategories, setAllCategories } from '../../utils/category'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 interface CategoryItem {
   name: string
@@ -13,16 +14,31 @@ Page({
     showAddModal: false,
     newCategoryName: '',
     newCategoryColor: '#1989fa',
-    editingIndex: -1
+    editingIndex: -1,
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
     this.loadCategories()
   },
 
   onShow() {
-    // 每次显示时重新加载分类（可能在其他页面创建了新分类，如待办任务）
+    // 每次显示时检查主题并重新加载分类
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
     this.loadCategories()
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   loadCategories() {

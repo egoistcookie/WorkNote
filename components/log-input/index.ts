@@ -1,4 +1,5 @@
 // components/log-input/index.ts
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Component({
   properties: {
@@ -21,24 +22,53 @@ Component({
     value: {
       type: String,
       value: ''
+    },
+    theme: {
+      type: String,
+      value: 'warm' as ThemeType
     }
   },
 
   data: {
-    iconColor: '#ff9800'
+    iconColor: '#F6C12C',
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
+  },
+
+  lifetimes: {
+    attached() {
+      const theme = getCurrentTheme()
+      const themeColors = getThemeColors(theme)
+      this.updateIconColor(theme)
+      this.setData({ theme, themeColors })
+    }
   },
 
   observers: {
+    'theme': function(theme: ThemeType) {
+      if (theme) {
+        const themeColors = getThemeColors(theme)
+        this.updateIconColor(theme)
+        this.setData({ themeColors })
+      }
+    },
     'type': function(type: string) {
-      // 根据类型设置图标颜色
-      const color = type === 'morning' ? '#ff9800' : '#7232dd'
-      this.setData({
-        iconColor: color
-      })
+      const theme = this.data.theme || getCurrentTheme()
+      this.updateIconColor(theme)
     }
   },
 
   methods: {
+    updateIconColor(theme: ThemeType) {
+      const themeColors = getThemeColors(theme)
+      const color = this.properties.type === 'morning' 
+        ? themeColors.accent 
+        : themeColors.darkAccent
+      this.setData({
+        iconColor: color
+      })
+    },
+    
     onInput(e: WechatMiniprogram.Input) {
       const value = e.detail.value
       this.triggerEvent('input', { value })

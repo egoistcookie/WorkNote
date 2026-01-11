@@ -2,6 +2,7 @@
 import { getCurrentDate, formatDate } from '../../utils/date'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
 import { Log, LogType } from '../../types/log'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
@@ -10,15 +11,33 @@ Page({
     showLogModal: false,
     editingLog: null as Log | null,
     logContent: '',
-    logType: LogType.MORNING
+    logType: LogType.MORNING,
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
     const today = getCurrentDate()
     this.setData({
       selectedDate: today
     })
     this.loadLogs()
+  },
+
+  onShow() {
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   loadLogs() {

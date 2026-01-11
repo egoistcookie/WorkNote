@@ -3,6 +3,7 @@ import { TodoTask, TaskStatus } from '../../types/task'
 import { getStorageSync } from '../../utils/storage'
 import { getCategoryColor } from '../../utils/category'
 import { formatDurationWithSeconds, getCurrentDate } from '../../utils/date'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
@@ -13,10 +14,15 @@ Page({
     totalDuration: 0,
     totalDurationText: '0秒',
     taskCount: 0, // 时间线任务的数量
-    taskCountText: '0' // 用于显示的文本
+    taskCountText: '0', // 用于显示的文本
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad(options: { category?: string }) {
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
     const category = decodeURIComponent(options.category || '')
     if (!category) {
       wx.showToast({
@@ -39,6 +45,19 @@ Page({
     wx.setNavigationBarTitle({
       title: category
     })
+  },
+
+  onShow() {
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   loadTasks(category: string) {

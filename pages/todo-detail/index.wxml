@@ -1,5 +1,5 @@
 <!--pages/todo-detail/index.wxml-->
-<view class="todo-detail-page">
+<view class="todo-detail-page theme-{{theme}}">
   <!-- 统计信息 -->
   <view class="stats-section">
     <view class="stats-card">

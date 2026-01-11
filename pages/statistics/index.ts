@@ -4,6 +4,7 @@ import { Task, TaskStatus } from '../../types/task'
 import { Category } from '../../types/common'
 import { getStorageSync } from '../../utils/storage'
 import { getCategoryColor } from '../../utils/category'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 interface CategoryStat {
   category: Category
@@ -38,21 +39,37 @@ Page({
       innerRadius: 0,
       width: 0,
       height: 0
-    }
+    },
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
     const today = getCurrentDate()
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
     this.setData({
-      selectedDate: today
+      selectedDate: today,
+      theme,
+      themeColors
     })
     this.loadStatistics(today)
   },
 
   onShow() {
-    // 每次显示页面时重新加载统计数据
+    // 每次显示页面时检查主题并重新加载统计数据
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
     const selectedDate = this.data.selectedDate || getCurrentDate()
     this.loadStatistics(selectedDate)
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   onDateChange(e: WechatMiniprogram.CustomEvent) {

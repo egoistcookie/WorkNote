@@ -13,10 +13,17 @@
   min-width: 100rpx;
 }
 
+.theme-warm .start-time {
+  color: #B22A2A;
+}
+
+.theme-cool .start-time {
+  color: #234369;
+}
+
 .start-time {
   font-size: 28rpx;
   font-weight: 500;
-  color: #323233;
   line-height: 1.5;
 }
 
@@ -32,8 +39,17 @@
   overflow: hidden;
 }
 
+.theme-warm .task-card {
+  background: linear-gradient(135deg, #F0DEBF 0%, #F7EBD5 100%);
+  border: 1rpx solid rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .task-card {
+  background: linear-gradient(135deg, #9ac8ec 0%, #e4e9ec 100%);
+  border: 1rpx solid rgba(89, 139, 176, 0.2);
+}
+
 .task-card {
-  background: linear-gradient(135deg, #f5e6ff 0%, #ffe6f5 100%);
   border-radius: 16rpx;
   padding: 24rpx;
   position: relative;
@@ -41,14 +57,24 @@
   box-sizing: border-box;
 }
 
-.task-card.task-running {
-  border: 2rpx solid #1989fa;
-  box-shadow: 0 4rpx 12rpx rgba(25, 137, 250, 0.2);
+.theme-warm .task-card.task-running {
+  border: 2rpx solid #F6C12C;
+  box-shadow: 0 4rpx 12rpx rgba(246, 193, 44, 0.3);
 }
 
-.task-card.task-selected {
-  border: 2rpx solid #07c160;
-  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.2);
+.theme-cool .task-card.task-running {
+  border: 2rpx solid #598bb0;
+  box-shadow: 0 4rpx 12rpx rgba(89, 139, 176, 0.3);
+}
+
+.theme-warm .task-card.task-selected {
+  border: 2rpx solid #B22A2A;
+  box-shadow: 0 4rpx 12rpx rgba(178, 42, 42, 0.3);
+}
+
+.theme-cool .task-card.task-selected {
+  border: 2rpx solid #234369;
+  box-shadow: 0 4rpx 12rpx rgba(35, 67, 105, 0.3);
 }
 
 .task-header {
@@ -112,10 +138,17 @@
   z-index: 5;
 }
 
+.theme-warm .running-dot {
+  background-color: #F6C12C;
+}
+
+.theme-cool .running-dot {
+  background-color: #598bb0;
+}
+
 .running-dot {
   width: 12rpx;
   height: 12rpx;
-  background-color: #1989fa;
   border-radius: 50%;
   animation: pulse 1.5s ease-in-out infinite;
 }
@@ -140,8 +173,15 @@
   gap: 8rpx;
 }
 
+.theme-warm .duration-text {
+  color: #B22A2A;
+}
+
+.theme-cool .duration-text {
+  color: #234369;
+}
+
 .duration-text {
-  color: #1989fa;
   font-weight: 500;
 }
 

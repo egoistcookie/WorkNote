@@ -1,5 +1,5 @@
 <!--pages/data-manage/index.wxml-->
-<view class="data-manage-page">
+<view class="data-manage-page theme-{{theme}}">
   <view class="header">
     <text class="title">数据管理</text>
     <view class="actions">

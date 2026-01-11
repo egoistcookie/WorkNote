@@ -23,7 +23,7 @@
     "color": "#7A7E83",
     "selectedColor": "#1989fa",
     "borderStyle": "black",
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "#F7EBD5",
     "list": [
       {
         "pagePath": "pages/timeline/index",

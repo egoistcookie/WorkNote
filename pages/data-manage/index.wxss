@@ -1,8 +1,25 @@
 /* pages/data-manage/index.wxss */
 .data-manage-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
   padding-bottom: 30rpx;
+}
+
+.data-manage-page.theme-warm {
+  background-color: #F0DEBF;
+}
+
+.data-manage-page.theme-cool {
+  background-color: #9ac8ec;
+}
+
+.theme-warm .header {
+  background-color: #F7EBD5;
+  border-bottom: 1rpx solid rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .header {
+  background-color: #e4e9ec;
+  border-bottom: 1rpx solid rgba(89, 139, 176, 0.2);
 }
 
 .header {
@@ -10,14 +27,19 @@
   align-items: center;
   justify-content: space-between;
   padding: 30rpx;
-  background-color: #ffffff;
-  border-bottom: 1rpx solid #ebedf0;
+}
+
+.theme-warm .title {
+  color: #B22A2A;
+}
+
+.theme-cool .title {
+  color: #234369;
 }
 
 .title {
   font-size: 36rpx;
   font-weight: 500;
-  color: #323233;
 }
 
 .actions {
@@ -29,22 +51,45 @@
   margin-left: 8rpx;
 }
 
+.theme-warm .export-content {
+  background: linear-gradient(135deg, #F0DEBF 0%, #F7EBD5 100%);
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+  box-shadow: 0 2rpx 8rpx rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .export-content {
+  background: linear-gradient(135deg, #9ac8ec 0%, #e4e9ec 100%);
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+  box-shadow: 0 2rpx 8rpx rgba(89, 139, 176, 0.2);
+}
+
 .export-content {
   margin: 20rpx 30rpx;
-  background-color: #ffffff;
   border-radius: 16rpx;
   padding: 30rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.theme-warm .export-textarea {
+  color: #B22A2A;
+  background-color: #F0DEBF;
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+}
+
+.theme-cool .export-textarea {
+  color: #234369;
+  background-color: #9ac8ec;
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
 }
 
 .export-textarea {
   width: 100%;
   min-height: 800rpx;
   font-size: 24rpx;
-  color: #323233;
   line-height: 1.8;
   font-family: 'Courier New', monospace;
   word-break: break-all;
+  border-radius: 8rpx;
+  padding: 20rpx;
 }
 
 /* 导入弹窗样式 */
@@ -98,7 +143,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #1989fa 0%, #07c160 100%);
+  background: linear-gradient(90deg, #F6C12C 0%, #B22A2A 100%);
   border-radius: 4rpx;
   transition: width 0.3s ease;
 }

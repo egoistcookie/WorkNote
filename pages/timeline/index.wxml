@@ -1,7 +1,13 @@
 <!--pages/timeline/index.wxml-->
-<view class="timeline-page">
+<view class="timeline-page theme-{{theme}}">
+  <!-- 主题切换按钮 -->
+  <view class="theme-toggle-btn" bindtap="onThemeToggle">
+    <van-icon name="{{theme === 'warm' ? 'fire' : 'gem'}}" size="20px" color="{{theme === 'warm' ? '#B22A2A' : '#234369'}}" />
+  </view>
+  
   <calendar 
     selectedDate="{{selectedDate}}"
+    theme="{{theme}}"
     bind:datechange="onDateChange"
   />
   
@@ -11,6 +17,7 @@
     placeholder="点击记录今日计划..."
     icon="sunrise-o"
     value="{{morningLog}}"
+    theme="{{theme}}"
     bind:tap="onMorningLogTap"
   />
   
@@ -24,6 +31,7 @@
       <task-item 
         task="{{item}}"
         selected="{{selectedTaskId === item.id}}"
+        theme="{{theme}}"
         bind:tap="onTaskTap"
         bind:detail="onTaskDetail"
       />
@@ -35,10 +43,12 @@
     <!-- 选中任务是进行状态时，显示暂停按钮 -->
     <van-button 
       wx:if="{{selectedTask.status === 'in_progress'}}"
-      type="default" 
+      type="primary" 
       size="normal"
+      custom-color="{{themeColors.darkAccent}}"
       bindtap="onPauseTask"
       class="pause-btn"
+      custom-style="background-color: {{themeColors.darkAccent}}; border: none; border-width: 0;"
     >
       <van-icon name="pause" size="18px" />
       <text class="button-text">暂停</text>
@@ -48,7 +58,7 @@
       wx:if="{{selectedTask.status === 'paused' || selectedTask.status === 'pending'}}"
       type="primary" 
       size="normal"
-      custom-color="#07c160"
+      custom-color="{{themeColors.accent}}"
       bindtap="onResumeTask"
       class="resume-btn"
     >
@@ -59,7 +69,7 @@
     <van-button 
       type="primary" 
       size="normal"
-      custom-color="#1989fa"
+      custom-color="{{themeColors.darkAccent}}"
       bindtap="onCompleteTask"
       class="complete-btn"
     >
@@ -73,7 +83,7 @@
     <van-button 
       type="primary" 
       size="large"
-      custom-color="#07c160"
+      custom-color="{{themeColors.accent}}"
       bindtap="onAddTask"
     >
       <van-icon name="plus" size="18px" />
@@ -90,6 +100,7 @@
     >
       <task-item 
         task="{{item}}"
+        theme="{{theme}}"
         bind:tap="onTaskTap"
       />
     </view>
@@ -101,6 +112,7 @@
     placeholder="点击记录今日总结..."
     icon="star-o"
     value="{{eveningLog}}"
+    theme="{{theme}}"
     bind:tap="onEveningLogTap"
   />
   
@@ -112,6 +124,7 @@
   <task-modal
     show="{{showTaskModal}}"
     task="{{editingTask}}"
+    theme="{{theme}}"
     bind:close="onTaskModalClose"
     bind:save="onTaskSave"
     bind:delete="onTaskDelete"
@@ -122,7 +135,7 @@
     show="{{showLogModal}}" 
     position="bottom"
     bind:close="onCancelLog"
-    custom-style="height: 50%; border-radius: 20rpx 20rpx 0 0;"
+    custom-style="height: 50%; border-radius: 20rpx 20rpx 0 0; background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
   >
     <view class="log-modal">
       <view class="modal-header">

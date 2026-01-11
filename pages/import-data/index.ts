@@ -3,6 +3,7 @@ import { Task, TaskStatus, TaskPriority } from '../../types/task'
 import { TodoTask } from '../../types/task'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
 import { getAllCategories, setAllCategories, CategoryItem } from '../../utils/category'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
@@ -15,11 +16,28 @@ Page({
       skipped: 0,
       failed: 0,
       details: [] as string[]
-    }
+    },
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
-    // 页面加载时不执行任何操作
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
+  },
+
+  onShow() {
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   onImportTextChange(e: WechatMiniprogram.CustomEvent) {

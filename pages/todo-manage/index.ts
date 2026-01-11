@@ -2,6 +2,7 @@
 import { TodoTask, TaskStatus, TaskPriority } from '../../types/task'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
 import { formatDate } from '../../utils/date'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
@@ -9,15 +10,30 @@ Page({
     filteredTasks: [] as TodoTask[],
     filterStatus: 'all' as 'all' | 'completed' | 'pending',
     showDeleteConfirm: false,
-    deletingTaskId: ''
+    deletingTaskId: '',
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
     this.loadTasks()
   },
 
   onShow() {
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
     this.loadTasks()
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   loadTasks() {

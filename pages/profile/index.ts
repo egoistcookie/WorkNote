@@ -1,6 +1,7 @@
 // pages/profile/index.ts
 import { getStorageSync, setStorageSync } from '../../utils/storage'
 import { Task } from '../../types/task'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 interface UserProfile {
   avatar: string
@@ -17,10 +18,15 @@ Page({
     recordDays: 0,
     showEditModal: false,
     editingField: '' as 'name' | 'email' | '',
-    editValue: ''
+    editValue: '',
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
     this.loadProfile()
     // 异步加载统计数据，避免阻塞 onLoad 生命周期
     setTimeout(() => {
@@ -29,10 +35,21 @@ Page({
   },
 
   onShow() {
+    // 每次显示页面时检查主题
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
     // 异步重新加载统计数据，避免阻塞 onShow 生命周期
     setTimeout(() => {
       this.loadStatistics()
     }, 0)
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   loadProfile() {

@@ -1,8 +1,15 @@
 /* components/calendar/index.wxss */
 .calendar-container {
-  background-color: #fff;
   padding: 20rpx 30rpx;
   margin-bottom: 20rpx;
+}
+
+.calendar-container.theme-warm {
+  background-color: #F0DEBF;
+}
+
+.calendar-container.theme-cool {
+  background-color: #9ac8ec;
 }
 
 .calendar-header {
@@ -12,20 +19,35 @@
   margin-bottom: 30rpx;
 }
 
+.theme-warm .date-selector {
+  background-color: #F7EBD5;
+  border: 1rpx solid #F6C12C;
+}
+
+.theme-cool .date-selector {
+  background-color: #e4e9ec;
+  border: 1rpx solid #598bb0;
+}
+
 .date-selector {
   display: flex;
   align-items: center;
   gap: 10rpx;
   padding: 10rpx 20rpx;
-  background-color: #fff;
-  border: 1rpx solid #ebedf0;
   border-radius: 8rpx;
+}
+
+.theme-warm .date-text {
+  color: #B22A2A;
+}
+
+.theme-cool .date-text {
+  color: #234369;
 }
 
 .date-text {
   font-size: 28rpx;
   font-weight: 500;
-  color: #323233;
 }
 
 
@@ -46,8 +68,12 @@
   border-radius: 8rpx;
 }
 
-.calendar-day.selected {
-  background-color: #1989fa;
+.theme-warm .calendar-day.selected {
+  background-color: #B22A2A;
+}
+
+.theme-cool .calendar-day.selected {
+  background-color: #234369;
 }
 
 .calendar-day.selected .weekday,
@@ -67,8 +93,15 @@
   color: #323233;
 }
 
+.theme-warm .calendar-day.today .day-number {
+  color: #F6C12C;
+}
+
+.theme-cool .calendar-day.today .day-number {
+  color: #598bb0;
+}
+
 .calendar-day.today .day-number {
-  color: #1989fa;
   font-weight: 600;
 }
 
@@ -84,5 +117,19 @@
   justify-content: center;
   font-size: 20rpx;
   color: #fff;
+}
+
+/* 日期选择器包装器样式 */
+.theme-warm .date-picker-wrapper {
+  background-color: #F7EBD5;
+}
+
+.theme-cool .date-picker-wrapper {
+  background-color: #e4e9ec;
+}
+
+.date-picker-wrapper {
+  width: 100%;
+  height: 100%;
 }
 

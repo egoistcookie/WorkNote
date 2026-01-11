@@ -7,6 +7,14 @@
   box-sizing: border-box;
 }
 
+.task-modal.theme-warm {
+  background-color: #F7EBD5;
+}
+
+.task-modal.theme-cool {
+  background-color: #e4e9ec;
+}
+
 .modal-header {
   margin-bottom: 30rpx;
 }
@@ -16,35 +24,62 @@
   align-items: center;
 }
 
+.theme-warm .task-title-badge {
+  background-color: #F0DEBF;
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+}
+
+.theme-cool .task-title-badge {
+  background-color: #9ac8ec;
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+}
+
 .task-title-badge {
   display: flex;
   align-items: center;
-  background-color: #e3f2fd;
   padding: 12rpx 24rpx;
   border-radius: 40rpx;
   flex: 1;
 }
 
+.theme-warm .title-dot {
+  background-color: #B22A2A;
+}
+
+.theme-cool .title-dot {
+  background-color: #234369;
+}
+
 .title-dot {
   width: 12rpx;
   height: 12rpx;
-  background-color: #1989fa;
   border-radius: 50%;
   margin-right: 12rpx;
   flex-shrink: 0;
 }
 
+.theme-warm .task-title-input {
+  color: #B22A2A;
+}
+
+.theme-cool .task-title-input {
+  color: #234369;
+}
+
 .task-title-input {
   font-size: 28rpx;
-  color: #333;
   flex: 1;
   background: transparent;
   border: none;
   outline: none;
 }
 
-.task-title-input::placeholder {
-  color: #999;
+.theme-warm .task-title-input::placeholder {
+  color: rgba(178, 42, 42, 0.5);
+}
+
+.theme-cool .task-title-input::placeholder {
+  color: rgba(35, 67, 105, 0.5);
 }
 
 .start-timer-section {
@@ -69,19 +104,43 @@
   gap: 24rpx;
 }
 
+.theme-warm .time-item {
+  background-color: #F0DEBF;
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+}
+
+.theme-cool .time-item {
+  background-color: #9ac8ec;
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+}
+
 .time-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 24rpx;
-  background-color: #f5f5f5;
   border-radius: 8rpx;
+}
+
+.theme-warm .time-label {
+  color: #B22A2A;
+}
+
+.theme-cool .time-label {
+  color: #234369;
 }
 
 .time-label {
   font-size: 28rpx;
-  color: #333;
   font-weight: 500;
+}
+
+.theme-warm .time-picker {
+  color: #B22A2A;
+}
+
+.theme-cool .time-picker {
+  color: #234369;
 }
 
 .time-picker {
@@ -89,23 +148,36 @@
   align-items: center;
   justify-content: space-between;
   font-size: 28rpx;
-  color: #323233;
   flex: 1;
   margin-left: 20rpx;
 }
 
+.theme-warm .time-picker:empty::before {
+  color: rgba(178, 42, 42, 0.5);
+}
+
+.theme-cool .time-picker:empty::before {
+  color: rgba(35, 67, 105, 0.5);
+}
+
 .time-picker:empty::before {
   content: '选择时间';
-  color: #999;
 }
 
 .category-section {
   margin-bottom: 30rpx;
 }
 
+.theme-warm .section-title {
+  color: #B22A2A;
+}
+
+.theme-cool .section-title {
+  color: #234369;
+}
+
 .section-title {
   font-size: 28rpx;
-  color: #333;
   font-weight: 500;
   margin-bottom: 20rpx;
 }
@@ -116,13 +188,23 @@
   gap: 16rpx;
 }
 
+.theme-warm .category-item {
+  color: #B22A2A;
+  background-color: #F0DEBF;
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+}
+
+.theme-cool .category-item {
+  color: #234369;
+  background-color: #9ac8ec;
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+}
+
 .category-item {
   padding: 16rpx 12rpx;
   border-radius: 40rpx;
   text-align: center;
   font-size: 24rpx;
-  color: #333;
-  background-color: #f5f5f5;
   transition: all 0.3s;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -130,7 +212,7 @@
 }
 
 .category-item.selected {
-  color: #333;
+  color: #ffffff;
   font-weight: 500;
 }
 
@@ -138,20 +220,34 @@
   margin-bottom: 30rpx;
 }
 
+.theme-warm .note-textarea {
+  background-color: #F0DEBF;
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+  color: #B22A2A;
+}
+
+.theme-cool .note-textarea {
+  background-color: #9ac8ec;
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+  color: #234369;
+}
+
 .note-textarea {
   width: 100%;
   min-height: 80rpx;
-  background-color: #f5f5f5;
   border-radius: 8rpx;
   padding: 20rpx;
   font-size: 28rpx;
-  color: #333;
   box-sizing: border-box;
   line-height: 1.5;
 }
 
-.note-textarea::placeholder {
-  color: #999;
+.theme-warm .note-textarea::placeholder {
+  color: rgba(178, 42, 42, 0.5);
+}
+
+.theme-cool .note-textarea::placeholder {
+  color: rgba(35, 67, 105, 0.5);
 }
 
 .save-section {

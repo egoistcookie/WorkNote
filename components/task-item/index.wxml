@@ -1,5 +1,5 @@
 <!--components/task-item/index.wxml-->
-<view class="task-item" bindtap="onTaskTap">
+<view class="task-item theme-{{theme}}" bindtap="onTaskTap">
   <view class="task-time">
     <text class="start-time">{{task.startTime}}</text>
     <text wx:if="{{task.endTime}}" class="end-time">{{task.endTime}}</text>

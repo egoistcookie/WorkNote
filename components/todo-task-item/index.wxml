@@ -1,5 +1,5 @@
 <!--components/todo-task-item/index.wxml-->
-<view class="todo-task-item">
+<view class="todo-task-item theme-{{theme}}">
   <view class="task-checkbox" catchtap="onCheckboxChange">
     <view class="checkbox {{task.status === 'completed' ? 'checked' : ''}}">
       <van-icon wx:if="{{task.status === 'completed'}}" name="checked" size="16px" color="#07c160" />

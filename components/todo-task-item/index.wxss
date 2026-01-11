@@ -1,9 +1,18 @@
 /* components/todo-task-item/index.wxss */
+.theme-warm .todo-task-item {
+  background: linear-gradient(135deg, #F0DEBF 0%, #F7EBD5 100%);
+  border: 1rpx solid rgba(246, 193, 44, 0.2);
+}
+
+.theme-cool .todo-task-item {
+  background: linear-gradient(135deg, #9ac8ec 0%, #e4e9ec 100%);
+  border: 1rpx solid rgba(89, 139, 176, 0.2);
+}
+
 .todo-task-item {
   display: flex;
   align-items: flex-start;
   padding: 16rpx;
-  background-color: #fafafa;
   border-radius: 12rpx;
   margin-bottom: 12rpx;
   position: relative;
@@ -25,9 +34,19 @@
   background-color: #fff;
 }
 
+.theme-warm .checkbox.checked {
+  border-color: #B22A2A;
+  background-color: #B22A2A;
+}
+
+.theme-cool .checkbox.checked {
+  border-color: #234369;
+  background-color: #234369;
+}
+
 .checkbox.checked {
-  border-color: #07c160;
-  background-color: #07c160;
+  border-color: #B22A2A;
+  background-color: #B22A2A;
 }
 
 .task-content {
@@ -41,6 +60,14 @@
   font-weight: 500;
   margin-bottom: 8rpx;
   word-break: break-all;
+}
+
+.theme-warm .task-title.completed {
+  color: #969799;
+}
+
+.theme-cool .task-title.completed {
+  color: #80807e;
 }
 
 .task-title.completed {
@@ -69,8 +96,16 @@
   gap: 4rpx;
 }
 
+.theme-warm .task-duration {
+  color: #B22A2A;
+}
+
+.theme-cool .task-duration {
+  color: #234369;
+}
+
 .task-duration {
-  color: #1989fa;
+  color: #B22A2A;
 }
 
 .play-icon {

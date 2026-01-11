@@ -1,5 +1,5 @@
 <!--pages/summary-manage/index.wxml-->
-<view class="summary-manage-page">
+<view class="summary-manage-page theme-{{theme}}">
   <view class="header">
     <text class="title">总结管理</text>
     <view class="add-buttons">

@@ -1,5 +1,5 @@
 <!--pages/profile/index.wxml-->
-<view class="profile-page">
+<view class="profile-page theme-{{theme}}">
   <!-- 用户信息卡片 -->
   <view class="profile-card">
     <view class="profile-header">
@@ -79,7 +79,7 @@
     show="{{showEditModal}}" 
     position="bottom"
     bind:close="onEditCancel"
-    custom-style="border-radius: 20rpx 20rpx 0 0;"
+    custom-style="border-radius: 20rpx 20rpx 0 0; background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
   >
     <view class="edit-modal">
       <view class="edit-header">

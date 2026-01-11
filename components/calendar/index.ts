@@ -1,5 +1,6 @@
 // components/calendar/index.ts
 import { getWeekDates, formatDate, isSameDay, getWeekdayAbbr, formatDateChinese, dateStringToTimestamp } from '../../utils/date'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Component({
   properties: {
@@ -7,6 +8,10 @@ Component({
       type: String,
       value: '',
       observer: 'onDateChange'
+    },
+    theme: {
+      type: String,
+      value: 'warm' as ThemeType
     }
   },
 
@@ -24,12 +29,26 @@ Component({
     showDatePicker: false,
     currentDate: new Date().getTime(),
     minDate: new Date(2020, 0, 1).getTime(),
-    maxDate: new Date(2099, 11, 31).getTime()
+    maxDate: new Date(2099, 11, 31).getTime(),
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   lifetimes: {
     attached() {
+      const theme = getCurrentTheme()
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
       this.initCalendar()
+    }
+  },
+
+  observers: {
+    'theme': function(theme: ThemeType) {
+      if (theme) {
+        const themeColors = getThemeColors(theme)
+        this.setData({ themeColors })
+      }
     }
   },
 

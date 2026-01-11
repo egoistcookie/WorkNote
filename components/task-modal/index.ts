@@ -2,6 +2,7 @@
 import { Category, CategoryColor } from '../../types/common'
 import { Task } from '../../types/task'
 import { getAllCategories } from '../../utils/category'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Component({
   properties: {
@@ -12,6 +13,10 @@ Component({
     task: {
       type: Object,
       value: undefined as Task | undefined
+    },
+    theme: {
+      type: String,
+      value: 'warm' as ThemeType
     }
   },
 
@@ -31,17 +36,26 @@ Component({
     isEditMode: false,
     taskId: '',
     categories: [] as Array<{ label: string; color: string }>,
-    elapsedSeconds: 0
+    elapsedSeconds: 0,
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
-  attached() {
-    // 组件挂载时加载分类列表
-    // 注意：在 attached 中调用 methods 需要使用 setTimeout 确保 methods 已初始化
-    setTimeout(() => {
-      if (this.loadCategories) {
-        this.loadCategories()
-      }
-    }, 0)
+  lifetimes: {
+    attached() {
+      // 初始化主题
+      const theme = this.properties.theme || getCurrentTheme()
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+      
+      // 组件挂载时加载分类列表
+      // 注意：在 attached 中调用 methods 需要使用 setTimeout 确保 methods 已初始化
+      setTimeout(() => {
+        if (this.loadCategories) {
+          this.loadCategories()
+        }
+      }, 0)
+    }
   },
 
   pageLifetimes: {
@@ -52,6 +66,12 @@ Component({
   },
 
   observers: {
+    'theme': function(theme: ThemeType) {
+      if (theme) {
+        const themeColors = getThemeColors(theme)
+        this.setData({ themeColors })
+      }
+    },
     show(show) {
       if (show) {
         // 每次显示时重新加载分类（可能在其他页面修改了分类，如待办任务创建了新分类）

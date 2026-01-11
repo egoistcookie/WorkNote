@@ -3,6 +3,7 @@ import { formatDate, getCurrentDate, getCurrentTime, formatDurationWithSeconds, 
 import { Task, TaskStatus } from '../../types/task'
 import { Category } from '../../types/common'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
+import { getCurrentTheme, toggleTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
@@ -20,18 +21,70 @@ Page({
     showLogModal: false,
     logType: 'morning' as 'morning' | 'evening',
     logContent: '',
-    editingLogDate: ''
+    editingLogDate: '',
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad() {
     const today = getCurrentDate()
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
     this.setData({
-      selectedDate: today
+      selectedDate: today,
+      theme: theme,
+      themeColors: themeColors
     })
     this.loadTasks(today)
     this.loadLogs(today)
     // 检查是否有正在进行的任务
     this.checkRunningTask()
+    // 应用主题样式
+    this.applyTheme(theme)
+  },
+
+  onShow() {
+    // 每次显示页面时检查主题是否变化
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+      this.applyTheme(theme)
+    }
+  },
+
+  onThemeToggle() {
+    const newTheme = toggleTheme()
+    const themeColors = getThemeColors(newTheme)
+    this.setData({ theme: newTheme, themeColors })
+    this.applyTheme(newTheme)
+    wx.showToast({
+      title: newTheme === 'warm' ? '暖色调' : '冷色调',
+      icon: 'success',
+      duration: 1500
+    })
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
+    this.applyTheme(theme)
+  },
+
+  applyTheme(theme: ThemeType) {
+    // 更新主题颜色
+    const themeColors = getThemeColors(theme)
+    this.setData({ themeColors })
+    // 重新加载页面以应用新主题样式
+    const pages = getCurrentPages()
+    if (pages.length > 0) {
+      const currentPage = pages[pages.length - 1]
+      if (currentPage === this) {
+        // 强制更新所有子组件和页面
+        this.loadTasks(this.data.selectedDate)
+        this.loadLogs(this.data.selectedDate)
+      }
+    }
   },
 
   onUnload() {

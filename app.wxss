@@ -17,6 +17,72 @@ page {
     sans-serif;
 }
 
+/* ==================== 主题样式系统 ==================== */
+
+/* 暖色调主题（默认） */
+.theme-warm {
+  --primary-bg: #F0DEBF;
+  --card-bg: #F7EBD5;
+  --accent: #F6C12C;
+  --dark-accent: #B22A2A;
+  --text-primary: #B22A2A;
+  --text-secondary: #969799;
+}
+
+.theme-warm .theme-bg-primary {
+  background-color: #F0DEBF !important;
+}
+
+.theme-warm .theme-bg-card {
+  background-color: #F7EBD5 !important;
+}
+
+.theme-warm .theme-text-primary {
+  color: #B22A2A !important;
+}
+
+.theme-warm .theme-accent {
+  color: #F6C12C !important;
+  background-color: #F6C12C !important;
+}
+
+.theme-warm .theme-dark-accent {
+  color: #B22A2A !important;
+  background-color: #B22A2A !important;
+}
+
+/* 冷色调主题 */
+.theme-cool {
+  --primary-bg: #9ac8ec;
+  --card-bg: #e4e9ec;
+  --accent: #598bb0;
+  --dark-accent: #234369;
+  --text-primary: #234369;
+  --text-secondary: #80807e;
+}
+
+.theme-cool .theme-bg-primary {
+  background-color: #9ac8ec !important;
+}
+
+.theme-cool .theme-bg-card {
+  background-color: #e4e9ec !important;
+}
+
+.theme-cool .theme-text-primary {
+  color: #234369 !important;
+}
+
+.theme-cool .theme-accent {
+  color: #598bb0 !important;
+  background-color: #598bb0 !important;
+}
+
+.theme-cool .theme-dark-accent {
+  color: #234369 !important;
+  background-color: #234369 !important;
+}
+
 /* 通用容器 */
 .page-container {
   min-height: 100vh;
@@ -37,5 +103,30 @@ page {
   justify-content: center;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
   z-index: 999;
+}
+
+/* 日期选择器全局样式覆盖 */
+.date-picker-wrapper .van-picker {
+  background-color: #F7EBD5 !important;
+}
+
+.date-picker-wrapper .van-picker__toolbar {
+  background-color: #F7EBD5 !important;
+}
+
+.date-picker-wrapper .van-picker__columns {
+  background-color: #F7EBD5 !important;
+}
+
+.date-picker-wrapper .van-picker-column {
+  background-color: #F7EBD5 !important;
+}
+
+.date-picker-wrapper .van-picker-column__item {
+  color: #B22A2A !important;
+}
+
+.date-picker-wrapper .van-picker__toolbar button {
+  color: #B22A2A !important;
 }
 

@@ -1,5 +1,5 @@
 <!--pages/todo-manage/index.wxml-->
-<view class="todo-manage-page">
+<view class="todo-manage-page theme-{{theme}}">
   <view class="header">
     <text class="title">待办管理</text>
     <text class="task-count">共 {{allTasks.length}} 条</text>

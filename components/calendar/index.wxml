@@ -1,5 +1,5 @@
 <!--components/calendar/index.wxml-->
-<view class="calendar-container">
+<view class="calendar-container theme-{{theme}}">
   <view class="calendar-header">
     <view class="date-selector" bindtap="onDatePickerTap">
       <text class="date-text">{{dateText}}</text>
@@ -27,18 +27,21 @@
   show="{{showDatePicker}}"
   position="bottom"
   bind:close="onDatePickerClose"
-  custom-style="border-radius: 20rpx 20rpx 0 0;"
+  custom-style="border-radius: 20rpx 20rpx 0 0; background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
 >
-  <van-datetime-picker
-    id="datePicker"
-    type="date"
-    value="{{currentDate}}"
-    min-date="{{minDate}}"
-    max-date="{{maxDate}}"
-    show-toolbar
-    title="选择日期"
-    bind:confirm="onDatePickerConfirmFromComponent"
-    bind:cancel="onDatePickerClose"
-  />
+  <view class="date-picker-wrapper">
+    <van-datetime-picker
+      id="datePicker"
+      type="date"
+      value="{{currentDate}}"
+      min-date="{{minDate}}"
+      max-date="{{maxDate}}"
+      show-toolbar
+      title="选择日期"
+      bind:confirm="onDatePickerConfirmFromComponent"
+      bind:cancel="onDatePickerClose"
+      custom-style="background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
+    />
+  </view>
 </van-popup>
 

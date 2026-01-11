@@ -3,12 +3,15 @@ import { Task, TaskStatus } from '../../types/task'
 import { Category, CategoryColor } from '../../types/common'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
 import { formatDurationWithSeconds, getSecondsDiff, parseTimeToTimestamp, formatTimeFromTimestamp } from '../../utils/date'
+import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
 
 Page({
   data: {
     task: {} as Task,
     categoryColor: '#969799',
-    statusText: ''
+    statusText: '',
+    theme: 'warm' as ThemeType,
+    themeColors: null as ThemeColors | null
   },
 
   onLoad(options: { taskId?: string; date?: string }) {
@@ -24,7 +27,24 @@ Page({
       return
     }
 
+    const theme = getCurrentTheme()
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
+
     this.loadTask(date, taskId)
+  },
+
+  onShow() {
+    const theme = getCurrentTheme()
+    if (this.data.theme !== theme) {
+      const themeColors = getThemeColors(theme)
+      this.setData({ theme, themeColors })
+    }
+  },
+
+  onThemeChange(theme: ThemeType) {
+    const themeColors = getThemeColors(theme)
+    this.setData({ theme, themeColors })
   },
 
   loadTask(date: string, taskId: string) {
