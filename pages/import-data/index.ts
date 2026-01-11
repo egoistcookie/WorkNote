@@ -675,10 +675,23 @@ Page({
       }
 
       existingTasks.push(newTask)
-      setStorageSync(tasksKey, existingTasks)
+      try {
+        setStorageSync(tasksKey, existingTasks)
+      } catch (storageErr: any) {
+        // 存储空间不足的错误，向上抛出
+        if (storageErr.message?.includes('存储空间不足')) {
+          throw storageErr
+        }
+        // 其他存储错误，返回失败
+        return { success: false, skipped: false, title: '' }
+      }
 
       return { success: true, skipped: false, title }
-    } catch (err) {
+    } catch (err: any) {
+      // 如果是存储空间不足的错误，重新抛出
+      if (err && err.message?.includes('存储空间不足')) {
+        throw err
+      }
       return { success: false, skipped: false, title: '' }
     }
   },
@@ -707,9 +720,16 @@ Page({
             const morningKey = `log_morning_${date}`
             const existingMorningLog = getStorageSync<string>(morningKey)
             if (!existingMorningLog || existingMorningLog !== morningLog.trim()) {
-              setStorageSync(morningKey, morningLog.trim())
-              successCount++
-              details.push(`晨间计划: ${date}`)
+              try {
+                setStorageSync(morningKey, morningLog.trim())
+                successCount++
+                details.push(`晨间计划: ${date}`)
+              } catch (storageErr: any) {
+                if (storageErr.message?.includes('存储空间不足')) {
+                  throw storageErr
+                }
+                // 其他存储错误，跳过
+              }
             } else {
               skippedCount++
               details.push(`跳过重复: 晨间计划 ${date}`)
@@ -728,9 +748,16 @@ Page({
             const eveningKey = `log_evening_${date}`
             const existingEveningLog = getStorageSync<string>(eveningKey)
             if (!existingEveningLog || existingEveningLog !== eveningLog.trim()) {
-              setStorageSync(eveningKey, eveningLog.trim())
-              successCount++
-              details.push(`晚间总结: ${date}`)
+              try {
+                setStorageSync(eveningKey, eveningLog.trim())
+                successCount++
+                details.push(`晚间总结: ${date}`)
+              } catch (storageErr: any) {
+                if (storageErr.message?.includes('存储空间不足')) {
+                  throw storageErr
+                }
+                // 其他存储错误，跳过
+              }
             } else {
               skippedCount++
               details.push(`跳过重复: 晚间总结 ${date}`)
@@ -756,9 +783,16 @@ Page({
         const morningKey = `log_morning_${date}`
         const existingMorningLog = getStorageSync<string>(morningKey)
         if (!existingMorningLog || existingMorningLog !== morningLog.trim()) {
-          setStorageSync(morningKey, morningLog.trim())
-          successCount++
-          details.push(`晨间计划: ${date}`)
+          try {
+            setStorageSync(morningKey, morningLog.trim())
+            successCount++
+            details.push(`晨间计划: ${date}`)
+          } catch (storageErr: any) {
+            if (storageErr.message?.includes('存储空间不足')) {
+              throw storageErr
+            }
+            // 其他存储错误，跳过
+          }
         } else {
           skippedCount++
           details.push(`跳过重复: 晨间计划 ${date}`)
@@ -769,9 +803,16 @@ Page({
         const eveningKey = `log_evening_${date}`
         const existingEveningLog = getStorageSync<string>(eveningKey)
         if (!existingEveningLog || existingEveningLog !== eveningLog.trim()) {
-          setStorageSync(eveningKey, eveningLog.trim())
-          successCount++
-          details.push(`晚间总结: ${date}`)
+          try {
+            setStorageSync(eveningKey, eveningLog.trim())
+            successCount++
+            details.push(`晚间总结: ${date}`)
+          } catch (storageErr: any) {
+            if (storageErr.message?.includes('存储空间不足')) {
+              throw storageErr
+            }
+            // 其他存储错误，跳过
+          }
         } else {
           skippedCount++
           details.push(`跳过重复: 晚间总结 ${date}`)
@@ -779,7 +820,11 @@ Page({
       }
 
       return { success: successCount, skipped: skippedCount, details }
-    } catch (err) {
+    } catch (err: any) {
+      // 如果是存储空间不足的错误，重新抛出
+      if (err && err.message?.includes('存储空间不足')) {
+        throw err
+      }
       return { success: 0, skipped: 0, details: [] }
     }
   },
@@ -853,10 +898,23 @@ Page({
       }
 
       existingTasks.push(newTask)
-      setStorageSync('todo_tasks', existingTasks)
+      try {
+        setStorageSync('todo_tasks', existingTasks)
+      } catch (storageErr: any) {
+        // 存储空间不足的错误，向上抛出
+        if (storageErr.message?.includes('存储空间不足')) {
+          throw storageErr
+        }
+        // 其他存储错误，返回失败
+        return { success: false, skipped: false, title: '' }
+      }
 
       return { success: true, skipped: false, title }
-    } catch (err) {
+    } catch (err: any) {
+      // 如果是存储空间不足的错误，重新抛出
+      if (err && err.message?.includes('存储空间不足')) {
+        throw err
+      }
       return { success: false, skipped: false, title: '' }
     }
   },

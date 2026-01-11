@@ -19,12 +19,18 @@ export function setStorage<T>(key: string, value: T): Promise<void> {
 
 /**
  * 同步存储数据
+ * @throws {Error} 当存储失败时抛出错误（如存储空间不足）
  */
 export function setStorageSync<T>(key: string, value: T): void {
   try {
     wx.setStorageSync(key, value)
-  } catch (err) {
-    // 存储失败，静默处理
+  } catch (err: any) {
+    // 如果是存储空间不足的错误，抛出异常以便上层处理
+    if (err && (err.errMsg?.includes('exceeded') || err.errMsg?.includes('maximum size') || err.errMsg?.includes('storage limit'))) {
+      throw new Error('存储空间不足，请清理数据或导出备份后再试')
+    }
+    // 其他错误也抛出，但不包含具体错误信息
+    throw err
   }
 }
 
