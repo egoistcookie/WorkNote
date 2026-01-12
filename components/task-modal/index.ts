@@ -1,8 +1,9 @@
 // components/task-modal/index.ts
 import { Category, CategoryColor } from '../../types/common'
-import { Task } from '../../types/task'
+import { Task, TaskStatus } from '../../types/task'
 import { getAllCategories } from '../../utils/category'
 import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
+import { formatTimeWithSeconds, formatDurationWithSeconds, getSecondsDiff } from '../../utils/date'
 
 Component({
   properties: {
@@ -37,7 +38,8 @@ Component({
     taskId: '',
     categories: [] as Array<{ label: string; color: string }>,
     elapsedSeconds: 0,
-    themeColors: null as ThemeColors | null
+    themeColors: null as ThemeColors | null,
+    timeSegmentsDisplay: [] as Array<{ startTime: string; endTime: string; duration: string; index: number }>
   },
 
   lifetimes: {
@@ -125,7 +127,8 @@ Component({
         endTimeArray: defaultTimeArray,
         isEditMode: false,
         taskId: '',
-        elapsedSeconds: 0
+        elapsedSeconds: 0,
+        timeSegmentsDisplay: []
       })
     },
 
@@ -153,6 +156,40 @@ Component({
       const startTimeArray = this.parseTimeString(task.startTime || '')
       const endTimeArray = task.endTime ? this.parseTimeString(task.endTime) : [0, 0, 0]
       
+      // 处理时间段显示
+      const timeSegmentsDisplay: Array<{ startTime: string; endTime: string; duration: string; index: number }> = []
+      
+      // 先添加已保存的时间段
+      if (task.timeSegments && task.timeSegments.length > 0) {
+        task.timeSegments.forEach((segment, index) => {
+          if (segment.startTimestamp) {
+            const startTime = formatTimeWithSeconds(new Date(segment.startTimestamp))
+            const endTime = segment.endTimestamp ? formatTimeWithSeconds(new Date(segment.endTimestamp)) : '进行中'
+            const duration = segment.duration ? formatDurationWithSeconds(segment.duration) : '-'
+            timeSegmentsDisplay.push({
+              startTime,
+              endTime,
+              duration,
+              index: index + 1
+            })
+          }
+        })
+      }
+      
+      // 如果任务正在进行中（有startTimestamp但没有对应的timeSegments条目），也显示当前时段
+      if (task.startTimestamp && task.status === TaskStatus.IN_PROGRESS) {
+        const startTime = formatTimeWithSeconds(new Date(task.startTimestamp))
+        const now = Date.now()
+        const currentDuration = getSecondsDiff(task.startTimestamp, now)
+        const duration = formatDurationWithSeconds(currentDuration)
+        timeSegmentsDisplay.push({
+          startTime,
+          endTime: '进行中',
+          duration,
+          index: timeSegmentsDisplay.length + 1
+        })
+      }
+      
       this.setData({
         taskTitle: task.title || '',
         taskNote: task.description || '',
@@ -162,7 +199,8 @@ Component({
         startTimeArray: startTimeArray,
         endTimeArray: endTimeArray,
         isEditMode: true,
-        taskId: task.id || ''
+        taskId: task.id || '',
+        timeSegmentsDisplay: timeSegmentsDisplay
       })
     },
 

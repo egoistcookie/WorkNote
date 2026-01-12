@@ -52,26 +52,32 @@ Component({
   },
 
   methods: {
+    buildWeekDates(baseDateStr?: string) {
+      const baseDate = baseDateStr ? this.parseDateString(baseDateStr) : new Date()
+      const todayStr = formatDate(new Date())
+      return getWeekDates(baseDate).map((d: Date) => {
+        const dateStr = formatDate(d)
+        return {
+          dateStr,
+          weekday: getWeekdayAbbr(d),
+          dayNumber: d.getDate(),
+          isSelected: baseDateStr ? dateStr === baseDateStr : dateStr === this.properties.selectedDate,
+          isToday: dateStr === todayStr
+        }
+      })
+    },
+
     initCalendar() {
       const today = new Date()
-      const weekDates = getWeekDates(today)
       const selectedDate = this.properties.selectedDate || formatDate(today)
+      const weekDates = this.buildWeekDates(selectedDate)
       const currentDateStr = formatDate(today)
       
       // 从日期字符串创建 Date 对象
       const selectedDateObj = this.parseDateString(selectedDate)
       
       this.setData({
-        weekDates: weekDates.map(d => {
-          const dateStr = formatDate(d)
-          return {
-            dateStr,
-            weekday: getWeekdayAbbr(d),
-            dayNumber: d.getDate(),
-            isSelected: dateStr === selectedDate,
-            isToday: dateStr === currentDateStr
-          }
-        }),
+        weekDates,
         currentDateStr,
         selectedDateStr: selectedDate,
         dateText: formatDateChinese(selectedDateObj)
@@ -126,18 +132,11 @@ Component({
     },
     
     updateWeekDates(selectedDate: string) {
-      const weekDates = this.data.weekDates.map((item: {
-        dateStr: string
-        weekday: string
-        dayNumber: number
-        isSelected: boolean
-        isToday: boolean
-      }) => ({
-        ...item,
-        isSelected: item.dateStr === selectedDate
-      }))
+      const weekDates = this.buildWeekDates(selectedDate)
+      const timestamp = dateStringToTimestamp(selectedDate)
       this.setData({
-        weekDates
+        weekDates,
+        currentDate: timestamp
       })
     },
 

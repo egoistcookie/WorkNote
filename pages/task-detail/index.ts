@@ -11,7 +11,8 @@ Page({
     categoryColor: '#969799',
     statusText: '',
     theme: 'warm' as ThemeType,
-    themeColors: null as ThemeColors | null
+    themeColors: null as ThemeColors | null,
+    timeSegmentsDisplay: [] as Array<{ startTime: string; endTime: string; duration: string; index: number }>
   },
 
   onLoad(options: { taskId?: string; date?: string }) {
@@ -73,10 +74,45 @@ Page({
     }
     const statusText = statusMap[task.status] || '未知'
 
+    // 处理时间段显示
+    const timeSegmentsDisplay: Array<{ startTime: string; endTime: string; duration: string; index: number }> = []
+    
+    // 先添加已保存的时间段
+    if (task.timeSegments && task.timeSegments.length > 0) {
+      task.timeSegments.forEach((segment, index) => {
+        if (segment.startTimestamp) {
+          const startTime = formatTimeFromTimestamp(segment.startTimestamp)
+          const endTime = segment.endTimestamp ? formatTimeFromTimestamp(segment.endTimestamp) : '进行中'
+          const duration = segment.duration ? formatDurationWithSeconds(segment.duration) : '-'
+          timeSegmentsDisplay.push({
+            startTime,
+            endTime,
+            duration,
+            index: index + 1
+          })
+        }
+      })
+    }
+    
+    // 如果任务正在进行中（有startTimestamp但没有对应的timeSegments条目），也显示当前时段
+    if (task.startTimestamp && task.status === TaskStatus.IN_PROGRESS) {
+      const startTime = formatTimeFromTimestamp(task.startTimestamp)
+      const now = Date.now()
+      const currentDuration = getSecondsDiff(task.startTimestamp, now)
+      const duration = formatDurationWithSeconds(currentDuration)
+      timeSegmentsDisplay.push({
+        startTime,
+        endTime: '进行中',
+        duration,
+        index: timeSegmentsDisplay.length + 1
+      })
+    }
+
     this.setData({
       task: task,
       categoryColor: categoryColor,
-      statusText: statusText
+      statusText: statusText,
+      timeSegmentsDisplay: timeSegmentsDisplay
     })
   },
 

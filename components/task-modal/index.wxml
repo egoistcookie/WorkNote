@@ -75,6 +75,26 @@
       </view>
     </view>
 
+    <!-- 时间段列表（仅在编辑模式且有时间段时显示） -->
+    <view class="time-segments-section" wx:if="{{isEditMode && timeSegmentsDisplay.length > 0}}">
+      <view class="section-title">时间段</view>
+      <view class="time-segments-list">
+        <view 
+          wx:for="{{timeSegmentsDisplay}}" 
+          wx:key="index"
+          class="time-segment-item"
+        >
+          <view class="segment-index">第{{item.index}}段</view>
+          <view class="segment-time">
+            <text class="segment-start">{{item.startTime}}</text>
+            <text class="segment-separator"> - </text>
+            <text class="segment-end">{{item.endTime}}</text>
+          </view>
+          <view class="segment-duration">{{item.duration}}</view>
+        </view>
+      </view>
+    </view>
+
     <!-- 分类选择 -->
     <view class="category-section">
       <view class="section-title">选择分类</view>

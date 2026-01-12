@@ -78,6 +78,26 @@
       <view class="section-label">日期</view>
       <view class="section-value">{{task.date}}</view>
     </view>
+
+    <!-- 时间段列表 -->
+    <view class="info-section" wx:if="{{timeSegmentsDisplay.length > 0}}">
+      <view class="section-label">时间段</view>
+      <view class="time-segments-list">
+        <view 
+          wx:for="{{timeSegmentsDisplay}}" 
+          wx:key="index"
+          class="time-segment-item"
+        >
+          <view class="segment-index">第{{item.index}}段</view>
+          <view class="segment-time">
+            <text class="segment-start">{{item.startTime}}</text>
+            <text class="segment-separator"> - </text>
+            <text class="segment-end">{{item.endTime}}</text>
+          </view>
+          <view class="segment-duration">{{item.duration}}</view>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 保存按钮 -->

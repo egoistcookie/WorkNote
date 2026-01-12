@@ -55,29 +55,34 @@ Page({
           }
           
           // 获取精确到秒的开始和结束时间
+          // 优先使用手动修改后的startTime和endTime（这些是用户实际设置的时间）
           let startTimeText = task.startTime || ''
           let endTimeText = task.endTime || ''
           
-          // 如果有时段数据，从时间戳中提取精确时间
-          if (task.timeSegments && task.timeSegments.length > 0) {
-            // 使用第一个时间段的开始时间戳
-            const firstSegment = task.timeSegments[0]
-            if (firstSegment.startTimestamp) {
-              startTimeText = formatTimeWithSeconds(new Date(firstSegment.startTimestamp))
-            }
-            // 使用最后一个时间段的结束时间戳
-            const lastSegment = task.timeSegments[task.timeSegments.length - 1]
-            if (lastSegment.endTimestamp) {
-              endTimeText = formatTimeWithSeconds(new Date(lastSegment.endTimestamp))
-            }
-          } else if (task.createdAt && task.updatedAt) {
-            // 如果没有时段数据，使用创建和更新时间作为参考
-            // 但只有当 startTime 和 endTime 都不存在时才使用
-            if (!task.startTime && task.createdAt) {
-              startTimeText = formatTimeWithSeconds(new Date(task.createdAt))
-            }
-            if (!task.endTime && task.updatedAt && task.status === TaskStatus.COMPLETED) {
-              endTimeText = formatTimeWithSeconds(new Date(task.updatedAt))
+          // 如果startTime和endTime存在，优先使用它们（手动修改后的值）
+          // 只有在它们不存在时，才从timeSegments或createdAt/updatedAt中提取
+          if (!startTimeText || !endTimeText) {
+            // 如果有时段数据，从时间戳中提取精确时间
+            if (task.timeSegments && task.timeSegments.length > 0) {
+              // 使用第一个时间段的开始时间戳
+              const firstSegment = task.timeSegments[0]
+              if (!startTimeText && firstSegment.startTimestamp) {
+                startTimeText = formatTimeWithSeconds(new Date(firstSegment.startTimestamp))
+              }
+              // 使用最后一个时间段的结束时间戳
+              const lastSegment = task.timeSegments[task.timeSegments.length - 1]
+              if (!endTimeText && lastSegment.endTimestamp) {
+                endTimeText = formatTimeWithSeconds(new Date(lastSegment.endTimestamp))
+              }
+            } else if (task.createdAt && task.updatedAt) {
+              // 如果没有时段数据，使用创建和更新时间作为参考
+              // 但只有当 startTime 和 endTime 都不存在时才使用
+              if (!startTimeText && task.createdAt) {
+                startTimeText = formatTimeWithSeconds(new Date(task.createdAt))
+              }
+              if (!endTimeText && task.updatedAt && task.status === TaskStatus.COMPLETED) {
+                endTimeText = formatTimeWithSeconds(new Date(task.updatedAt))
+              }
             }
           }
           
@@ -103,6 +108,20 @@ Page({
           if (duration) {
             text += ` | 时长: ${duration}`
           }
+          
+          // 如果有多个时间段，展示所有时间段
+          if (task.timeSegments && task.timeSegments.length > 1) {
+            text += `\n   时间段详情:`
+            task.timeSegments.forEach((segment, segIndex) => {
+              if (segment.startTimestamp) {
+                const segStartTime = formatTimeWithSeconds(new Date(segment.startTimestamp))
+                const segEndTime = segment.endTimestamp ? formatTimeWithSeconds(new Date(segment.endTimestamp)) : '进行中'
+                const segDuration = segment.duration ? formatDurationWithSeconds(segment.duration) : '-'
+                text += `\n     第${segIndex + 1}段: ${segStartTime} - ${segEndTime} (${segDuration})`
+              }
+            })
+          }
+          
           text += '\n'
         })
       }

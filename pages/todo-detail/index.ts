@@ -129,9 +129,23 @@ Page({
             } else if (task.startTime && task.endTime) {
               // 使用起止时间计算（用于导入的任务）
               const startTimestamp = parseTimeToTimestamp(dateStr, task.startTime)
-              const endTimestamp = parseTimeToTimestamp(dateStr, task.endTime)
+              let endTimestamp = parseTimeToTimestamp(dateStr, task.endTime)
+              
+              // 处理跨天情况：如果结束时间小于开始时间，说明是跨天任务，结束时间应该是第二天
               if (startTimestamp && endTimestamp) {
-                taskSeconds = getSecondsDiff(startTimestamp, endTimestamp)
+                if (endTimestamp <= startTimestamp) {
+                  // 跨天任务：结束时间加一天
+                  const [year, month, day] = dateStr.split('-').map(Number)
+                  const timeParts = task.endTime.split(':')
+                  const hour = parseInt(timeParts[0]) || 0
+                  const minute = parseInt(timeParts[1]) || 0
+                  const second = parseInt(timeParts[2]) || 0
+                  const endDate = new Date(year, month - 1, day + 1, hour, minute, second)
+                  endTimestamp = endDate.getTime()
+                }
+                if (endTimestamp > startTimestamp) {
+                  taskSeconds = getSecondsDiff(startTimestamp, endTimestamp)
+                }
               }
             }
             

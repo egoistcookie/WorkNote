@@ -164,6 +164,66 @@
   content: '选择时间';
 }
 
+.time-segments-section {
+  margin-bottom: 30rpx;
+}
+
+.time-segments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.time-segment-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  border-radius: 8rpx;
+}
+
+.theme-warm .time-segment-item {
+  background-color: #F0DEBF;
+  border: 1rpx solid rgba(246, 193, 44, 0.3);
+}
+
+.theme-cool .time-segment-item {
+  background-color: #9ac8ec;
+  border: 1rpx solid rgba(89, 139, 176, 0.3);
+}
+
+.segment-index {
+  font-size: 24rpx;
+  color: #969799;
+  width: 100rpx;
+  flex-shrink: 0;
+}
+
+.segment-time {
+  flex: 1;
+  font-size: 26rpx;
+}
+
+.theme-warm .segment-start,
+.theme-warm .segment-end {
+  color: #B22A2A;
+}
+
+.theme-cool .segment-start,
+.theme-cool .segment-end {
+  color: #234369;
+}
+
+.segment-separator {
+  color: #969799;
+  margin: 0 8rpx;
+}
+
+.segment-duration {
+  font-size: 24rpx;
+  color: #969799;
+  margin-left: 20rpx;
+}
+
 .category-section {
   margin-bottom: 30rpx;
 }

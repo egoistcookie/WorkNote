@@ -115,3 +115,52 @@
 .theme-cool .save-button-wrapper van-button {
   background-color: #234369;
 }
+
+.time-segments-list {
+  flex: 1;
+  margin-top: 20rpx;
+}
+
+.time-segment-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.time-segment-item:last-child {
+  border-bottom: none;
+}
+
+.segment-index {
+  font-size: 24rpx;
+  color: #969799;
+  width: 100rpx;
+  flex-shrink: 0;
+}
+
+.segment-time {
+  flex: 1;
+  font-size: 26rpx;
+}
+
+.theme-warm .segment-start,
+.theme-warm .segment-end {
+  color: #B22A2A;
+}
+
+.theme-cool .segment-start,
+.theme-cool .segment-end {
+  color: #234369;
+}
+
+.segment-separator {
+  color: #969799;
+  margin: 0 8rpx;
+}
+
+.segment-duration {
+  font-size: 24rpx;
+  color: #969799;
+  margin-left: 20rpx;
+}

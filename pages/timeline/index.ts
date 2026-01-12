@@ -1,5 +1,5 @@
 // pages/timeline/index.ts
-import { formatDate, getCurrentDate, getCurrentTime, formatDurationWithSeconds, getSecondsDiff } from '../../utils/date'
+import { formatDate, getCurrentDate, getCurrentTime, formatDurationWithSeconds, getSecondsDiff, parseTimeToTimestamp, formatTimeFromTimestamp } from '../../utils/date'
 import { Task, TaskStatus } from '../../types/task'
 import { Category } from '../../types/common'
 import { getStorageSync, setStorageSync } from '../../utils/storage'
@@ -107,9 +107,59 @@ Page({
     // 从存储获取任务
     const tasksKey = `tasks_${date}`
     const allTasks = getStorageSync<Task[]>(tasksKey) || []
-    
+
+    // 补齐导入任务的耗时字段（导入数据可能只有开始/结束时间）
+    const normalizeTask = (task: Task): Task => {
+      // 已有耗时直接返回
+      if (task.elapsedSeconds && task.duration) {
+        return task
+      }
+
+      // 优先累加时间片
+      let totalSeconds = 0
+      if (task.timeSegments && task.timeSegments.length > 0) {
+        totalSeconds = task.timeSegments.reduce((sum, seg) => sum + (seg.duration || 0), 0)
+      }
+
+      // 如果没有时间片但有开始/结束时间，按日期计算耗时
+      if (totalSeconds === 0 && task.startTime && task.endTime) {
+        const targetDate = task.date || date
+        const startTs = parseTimeToTimestamp(targetDate, task.startTime)
+        let endTs = parseTimeToTimestamp(targetDate, task.endTime)
+        
+        // 处理跨天情况：如果结束时间小于开始时间，说明是跨天任务，结束时间应该是第二天
+        if (startTs && endTs) {
+          if (endTs <= startTs) {
+            // 跨天任务：结束时间加一天
+            const [year, month, day] = targetDate.split('-').map(Number)
+            const timeParts = task.endTime.split(':')
+            const hour = parseInt(timeParts[0]) || 0
+            const minute = parseInt(timeParts[1]) || 0
+            const second = parseInt(timeParts[2]) || 0
+            const endDate = new Date(year, month - 1, day + 1, hour, minute, second)
+            endTs = endDate.getTime()
+          }
+          if (endTs > startTs) {
+            totalSeconds = getSecondsDiff(startTs, endTs)
+          }
+        }
+      }
+
+      // 如果仍为0且有已有字段，沿用原值
+      const elapsedSeconds = totalSeconds > 0 ? totalSeconds : (task.elapsedSeconds || 0)
+      const duration = elapsedSeconds > 0 ? formatDurationWithSeconds(elapsedSeconds) : task.duration
+
+      return {
+        ...task,
+        elapsedSeconds,
+        duration
+      }
+    }
+
+    const normalizedAllTasks = allTasks.map(normalizeTask)
+
     // 分离未完成和已完成的任务，并按时间倒序排列
-    const inProgressTasks = allTasks
+    const inProgressTasks = normalizedAllTasks
       .filter(task => 
         task.status === TaskStatus.IN_PROGRESS || 
         task.status === TaskStatus.PENDING || 
@@ -134,7 +184,7 @@ Page({
         return b.createdAt - a.createdAt
       })
     
-    const completedTasks = allTasks
+    const completedTasks = normalizedAllTasks
       .filter(task => task.status === TaskStatus.COMPLETED)
       .sort((a, b) => b.updatedAt - a.updatedAt) // 按完成时间倒序
 
@@ -786,7 +836,6 @@ Page({
     if (!task) return
 
     const now = Date.now()
-    const endTime = getCurrentTime()
     
     // 如果任务正在计时，先结束当前时间段
     if (task.startTimestamp) {
@@ -812,6 +861,21 @@ Page({
     }
     
     const duration = formatDurationWithSeconds(totalDuration)
+
+    // 确定结束时间：如果任务曾经暂停过（有timeSegments），使用最后一个时间段的结束时间
+    // 否则使用当前时间
+    let endTime: string
+    if (task.timeSegments && task.timeSegments.length > 0) {
+      // 获取最后一个时间段（应该是最新的）
+      const lastSegment = task.timeSegments[task.timeSegments.length - 1]
+      if (lastSegment.endTimestamp) {
+        endTime = formatTimeFromTimestamp(lastSegment.endTimestamp)
+      } else {
+        endTime = getCurrentTime()
+      }
+    } else {
+      endTime = getCurrentTime()
+    }
 
     // 更新任务状态
     const updatedTask: Task = {
