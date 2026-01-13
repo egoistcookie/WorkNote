@@ -638,11 +638,64 @@ Page({
       const statusText = statusMatch ? statusMatch[1].trim() : '待开始'
       const status = this.parseStatus(statusText)
 
-      const startTimeMatch = fullText.match(/开始:\s*(\d{2}:\d{2})/)
+      const startTimeMatch = fullText.match(/开始:\s*(\d{2}:\d{2}(?::\d{2})?)/)
       const startTime = startTimeMatch ? startTimeMatch[1] : '00:00'
 
-      const endTimeMatch = fullText.match(/结束:\s*(\d{2}:\d{2})/)
+      const endTimeMatch = fullText.match(/结束:\s*(\d{2}:\d{2}(?::\d{2})?)/)
       const endTime = endTimeMatch ? endTimeMatch[1] : undefined
+
+      // 解析时间段信息
+      const timeSegments: Array<{ startTimestamp: number; endTimestamp?: number; duration?: number }> = []
+      let totalElapsedSeconds = 0
+      
+      // 查找时间段详情部分
+      const timeSegmentsIndex = lines.findIndex(line => line.includes('时间段详情:'))
+      if (timeSegmentsIndex >= 0) {
+        // 解析时间段行，格式: "第1段: 08:15:34 - 08:15:54 (19秒)" 或带缩进的 "     第1段: 08:15:34 - 08:15:54 (19秒)"
+        for (let i = timeSegmentsIndex + 1; i < lines.length; i++) {
+          const segmentLine = lines[i].trim() // 去除前后空格
+          // 匹配格式: "第X段: HH:mm:ss - HH:mm:ss (X秒)" 或 "第X段: HH:mm:ss - 进行中 (X秒)"
+          const segmentMatch = segmentLine.match(/第\d+段:\s*(\d{2}:\d{2}:\d{2})\s*-\s*(\d{2}:\d{2}:\d{2}|进行中)\s*\(([^)]+)\)/)
+          if (segmentMatch) {
+            const startTimeStr = segmentMatch[1] // HH:mm:ss
+            const endTimeStr = segmentMatch[2] // HH:mm:ss 或 "进行中"
+            const durationStr = segmentMatch[3] // 如 "19秒" 或 "6分21秒"
+            
+            // 将时间字符串转换为时间戳
+            const [hour, minute, second] = startTimeStr.split(':').map(Number)
+            const startDate = new Date(`${date}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`)
+            const startTimestamp = startDate.getTime()
+            
+            let endTimestamp: number | undefined
+            let duration: number | undefined
+            
+            if (endTimeStr !== '进行中') {
+              const [endHour, endMinute, endSecond] = endTimeStr.split(':').map(Number)
+              const endDate = new Date(`${date}T${String(endHour).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}:${String(endSecond).padStart(2, '0')}`)
+              endTimestamp = endDate.getTime()
+            }
+            
+            // 解析时长字符串（如 "19秒" 或 "6分21秒"）
+            duration = this.parseDurationString(durationStr)
+            if (!duration && startTimestamp && endTimestamp) {
+              duration = Math.floor((endTimestamp - startTimestamp) / 1000)
+            }
+            
+            if (duration) {
+              totalElapsedSeconds += duration
+            }
+            
+            timeSegments.push({
+              startTimestamp,
+              endTimestamp,
+              duration
+            })
+          } else {
+            // 如果不再匹配时间段格式，停止解析
+            break
+          }
+        }
+      }
 
       // 检查是否已存在（通过标题、日期、分类和时间段判断）
       const tasksKey = `tasks_${date}`
@@ -661,6 +714,16 @@ Page({
       }
 
       const now = Date.now()
+      
+      // 计算总耗时
+      let duration: string | undefined
+      let elapsedSeconds: number | undefined
+      if (timeSegments.length > 0) {
+        elapsedSeconds = totalElapsedSeconds
+        const { formatDurationWithSeconds } = require('../../utils/date')
+        duration = formatDurationWithSeconds(totalElapsedSeconds)
+      }
+      
       const newTask: Task = {
         id: `task_${now}_${Math.random().toString(36).substr(2, 9)}`,
         title,
@@ -671,7 +734,10 @@ Page({
         status,
         date,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
+        timeSegments: timeSegments.length > 0 ? timeSegments : undefined,
+        elapsedSeconds,
+        duration
       }
 
       existingTasks.push(newTask)
@@ -949,6 +1015,35 @@ Page({
     } catch (err) {
       //console.log(`  解析异常:`, err)
       return { success: false, name: '', category: { name: '', color: '' } }
+    }
+  },
+
+  parseDurationString(durationStr: string): number | undefined {
+    // 解析时长字符串，如 "19秒"、"6分21秒"、"1时20分30秒"
+    try {
+      let totalSeconds = 0
+      
+      // 匹配小时
+      const hourMatch = durationStr.match(/(\d+)时/)
+      if (hourMatch) {
+        totalSeconds += parseInt(hourMatch[1]) * 3600
+      }
+      
+      // 匹配分钟
+      const minuteMatch = durationStr.match(/(\d+)分/)
+      if (minuteMatch) {
+        totalSeconds += parseInt(minuteMatch[1]) * 60
+      }
+      
+      // 匹配秒
+      const secondMatch = durationStr.match(/(\d+)秒/)
+      if (secondMatch) {
+        totalSeconds += parseInt(secondMatch[1])
+      }
+      
+      return totalSeconds > 0 ? totalSeconds : undefined
+    } catch (e) {
+      return undefined
     }
   },
 

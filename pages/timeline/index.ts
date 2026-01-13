@@ -614,7 +614,7 @@ Page({
   },
 
   onTaskSave(e: WechatMiniprogram.CustomEvent) {
-    const { id, title, category, description, startTime, endTime, isEdit, startTimer } = e.detail
+    const { id, title, category, description, startTime, endTime, isEdit, startTimer, timeSegments } = e.detail
     const now = Date.now()
     const currentDate = this.data.selectedDate || getCurrentDate()
     
@@ -628,7 +628,8 @@ Page({
         category,
         description: taskDescription,
         startTime,
-        endTime
+        endTime,
+        timeSegments: timeSegments
       })
     } else {
       // 新建模式：创建新任务
@@ -741,10 +742,16 @@ Page({
     const task = allTasks.find(t => t.id === taskId)
     if (!task) return
 
-    // 如果修改了时间，重新计算耗时
+    // 如果修改了时间段，重新计算总耗时
     let duration = task.duration
     let elapsedSeconds = task.elapsedSeconds
-    if (updates.startTime || updates.endTime) {
+    if (updates.timeSegments !== undefined) {
+      // 使用编辑后的时间段计算总耗时
+      const totalSeconds = updates.timeSegments.reduce((sum, seg) => sum + (seg.duration || 0), 0)
+      elapsedSeconds = totalSeconds
+      duration = formatDurationWithSeconds(totalSeconds)
+    } else if (updates.startTime || updates.endTime) {
+      // 如果修改了时间，重新计算耗时
       const startTime = updates.startTime || task.startTime
       const endTime = updates.endTime || task.endTime
       
@@ -767,6 +774,11 @@ Page({
       duration,
       elapsedSeconds,
       updatedAt: Date.now()
+    }
+    
+    // 如果更新了时间段，确保 timeSegments 字段被正确设置
+    if (updates.timeSegments !== undefined) {
+      updatedTask.timeSegments = updates.timeSegments
     }
 
     // 更新存储

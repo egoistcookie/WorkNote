@@ -39,7 +39,14 @@ Component({
     categories: [] as Array<{ label: string; color: string }>,
     elapsedSeconds: 0,
     themeColors: null as ThemeColors | null,
-    timeSegmentsDisplay: [] as Array<{ startTime: string; endTime: string; duration: string; index: number }>
+    timeSegmentsDisplay: [] as Array<{ startTime: string; endTime: string; duration: string; index: number; startTimestamp?: number; endTimestamp?: number }>,
+    showSegmentEditModal: false,
+    editingSegmentIndex: -1,
+    editingSegmentStartTime: '',
+    editingSegmentEndTime: '',
+    editingSegmentStartTimeArray: [0, 0, 0] as number[],
+    editingSegmentEndTimeArray: [0, 0, 0] as number[],
+    originalTimeSegments: [] as Array<{ startTimestamp: number; endTimestamp?: number; duration?: number }>
   },
 
   lifetimes: {
@@ -156,8 +163,11 @@ Component({
       const startTimeArray = this.parseTimeString(task.startTime || '')
       const endTimeArray = task.endTime ? this.parseTimeString(task.endTime) : [0, 0, 0]
       
+      // 保存原始时间段数据
+      const originalTimeSegments = task.timeSegments ? [...task.timeSegments] : []
+      
       // 处理时间段显示
-      const timeSegmentsDisplay: Array<{ startTime: string; endTime: string; duration: string; index: number }> = []
+      const timeSegmentsDisplay: Array<{ startTime: string; endTime: string; duration: string; index: number; startTimestamp?: number; endTimestamp?: number }> = []
       
       // 先添加已保存的时间段
       if (task.timeSegments && task.timeSegments.length > 0) {
@@ -170,7 +180,9 @@ Component({
               startTime,
               endTime,
               duration,
-              index: index + 1
+              index: index + 1,
+              startTimestamp: segment.startTimestamp,
+              endTimestamp: segment.endTimestamp
             })
           }
         })
@@ -186,7 +198,9 @@ Component({
           startTime,
           endTime: '进行中',
           duration,
-          index: timeSegmentsDisplay.length + 1
+          index: timeSegmentsDisplay.length + 1,
+          startTimestamp: task.startTimestamp,
+          endTimestamp: undefined
         })
       }
       
@@ -200,7 +214,8 @@ Component({
         endTimeArray: endTimeArray,
         isEditMode: true,
         taskId: task.id || '',
-        timeSegmentsDisplay: timeSegmentsDisplay
+        timeSegmentsDisplay: timeSegmentsDisplay,
+        originalTimeSegments: originalTimeSegments
       })
     },
 
@@ -266,8 +281,155 @@ Component({
       })
     },
 
+    onSegmentTap(e: WechatMiniprogram.CustomEvent) {
+      const { index } = e.currentTarget.dataset
+      const segment = this.data.timeSegmentsDisplay[index]
+      if (!segment || segment.endTime === '进行中') {
+        // 进行中的时间段不能编辑
+        wx.showToast({
+          title: '进行中的时间段不能编辑',
+          icon: 'none'
+        })
+        return
+      }
+
+      // 解析开始和结束时间
+      const startTimeArray = this.parseTimeString(segment.startTime)
+      const endTimeArray = this.parseTimeString(segment.endTime)
+
+      this.setData({
+        showSegmentEditModal: true,
+        editingSegmentIndex: index,
+        editingSegmentStartTime: segment.startTime,
+        editingSegmentEndTime: segment.endTime,
+        editingSegmentStartTimeArray: startTimeArray,
+        editingSegmentEndTimeArray: endTimeArray
+      })
+    },
+
+    onEditingSegmentStartTimeColumnChange(e: WechatMiniprogram.PickerColumnChange) {
+      const { column, value } = e.detail
+      const timeArray = [...this.data.editingSegmentStartTimeArray]
+      timeArray[column] = value
+      const timeStr = this.formatTimeArray(timeArray)
+      this.setData({
+        editingSegmentStartTimeArray: timeArray,
+        editingSegmentStartTime: timeStr
+      })
+    },
+
+    onEditingSegmentEndTimeColumnChange(e: WechatMiniprogram.PickerColumnChange) {
+      const { column, value } = e.detail
+      const timeArray = [...this.data.editingSegmentEndTimeArray]
+      timeArray[column] = value
+      const timeStr = this.formatTimeArray(timeArray)
+      this.setData({
+        editingSegmentEndTimeArray: timeArray,
+        editingSegmentEndTime: timeStr
+      })
+    },
+
+    onEditingSegmentStartTimeChange(e: WechatMiniprogram.PickerChange) {
+      const value = e.detail.value as number[]
+      const timeStr = this.formatTimeArray(value)
+      this.setData({
+        editingSegmentStartTimeArray: value,
+        editingSegmentStartTime: timeStr
+      })
+    },
+
+    onEditingSegmentEndTimeChange(e: WechatMiniprogram.PickerChange) {
+      const value = e.detail.value as number[]
+      const timeStr = this.formatTimeArray(value)
+      this.setData({
+        editingSegmentEndTimeArray: value,
+        editingSegmentEndTime: timeStr
+      })
+    },
+
+    onSegmentEditSave() {
+      const { editingSegmentIndex, editingSegmentStartTime, editingSegmentEndTime, timeSegmentsDisplay } = this.data
+      
+      if (!editingSegmentStartTime || !editingSegmentEndTime) {
+        wx.showToast({
+          title: '请选择开始和结束时间',
+          icon: 'none'
+        })
+        return
+      }
+
+      // 验证时间顺序
+      const startTimeStr = editingSegmentStartTime.replace(/:/g, '')
+      const endTimeStr = editingSegmentEndTime.replace(/:/g, '')
+      if (parseInt(startTimeStr) >= parseInt(endTimeStr)) {
+        wx.showToast({
+          title: '结束时间必须晚于开始时间',
+          icon: 'none'
+        })
+        return
+      }
+
+      // 将时间字符串转换为时间戳（使用任务日期）
+      const task = this.properties.task
+      if (!task) return
+
+      const taskDate = task.date || new Date().toISOString().split('T')[0]
+      const [startHour, startMin, startSec] = editingSegmentStartTime.split(':').map(Number)
+      const [endHour, endMin, endSec] = editingSegmentEndTime.split(':').map(Number)
+      
+      const startDate = new Date(`${taskDate}T${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}:${String(startSec).padStart(2, '0')}`)
+      const endDate = new Date(`${taskDate}T${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}:${String(endSec).padStart(2, '0')}`)
+      
+      const startTimestamp = startDate.getTime()
+      const endTimestamp = endDate.getTime()
+      const duration = Math.floor((endTimestamp - startTimestamp) / 1000)
+
+      // 更新时间段显示
+      const updatedSegments = [...timeSegmentsDisplay]
+      updatedSegments[editingSegmentIndex] = {
+        ...updatedSegments[editingSegmentIndex],
+        startTime: editingSegmentStartTime,
+        endTime: editingSegmentEndTime,
+        duration: formatDurationWithSeconds(duration),
+        startTimestamp,
+        endTimestamp
+      }
+
+      // 更新原始时间段数据
+      const updatedOriginalSegments = [...this.data.originalTimeSegments]
+      if (updatedOriginalSegments[editingSegmentIndex]) {
+        updatedOriginalSegments[editingSegmentIndex] = {
+          startTimestamp,
+          endTimestamp,
+          duration
+        }
+      }
+
+      this.setData({
+        timeSegmentsDisplay: updatedSegments,
+        originalTimeSegments: updatedOriginalSegments,
+        showSegmentEditModal: false,
+        editingSegmentIndex: -1,
+        editingSegmentStartTime: '',
+        editingSegmentEndTime: '',
+        editingSegmentStartTimeArray: [0, 0, 0],
+        editingSegmentEndTimeArray: [0, 0, 0]
+      })
+    },
+
+    onSegmentEditClose() {
+      this.setData({
+        showSegmentEditModal: false,
+        editingSegmentIndex: -1,
+        editingSegmentStartTime: '',
+        editingSegmentEndTime: '',
+        editingSegmentStartTimeArray: [0, 0, 0],
+        editingSegmentEndTimeArray: [0, 0, 0]
+      })
+    },
+
     onSave() {
-      const { taskTitle, selectedCategory, taskNote, startTime, endTime, isEditMode, taskId } = this.data
+      const { taskTitle, selectedCategory, taskNote, startTime, endTime, isEditMode, taskId, originalTimeSegments } = this.data
       // 如果没有输入标题，使用分类名称作为标题
       const finalTitle = (taskTitle && taskTitle.trim()) || selectedCategory || ''
       // 安全处理备注，避免 undefined 错误
@@ -281,7 +443,8 @@ Component({
         startTime: startTime,
         endTime: endTime,
         isEdit: isEditMode,
-        startTimer: false
+        startTimer: false,
+        timeSegments: originalTimeSegments
       })
     },
 

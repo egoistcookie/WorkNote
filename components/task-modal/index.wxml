@@ -83,6 +83,8 @@
           wx:for="{{timeSegmentsDisplay}}" 
           wx:key="index"
           class="time-segment-item"
+          data-index="{{index}}"
+          bindtap="onSegmentTap"
         >
           <view class="segment-index">第{{item.index}}段</view>
           <view class="segment-time">
@@ -91,9 +93,72 @@
             <text class="segment-end">{{item.endTime}}</text>
           </view>
           <view class="segment-duration">{{item.duration}}</view>
+          <van-icon name="edit" size="16px" color="{{themeColors ? themeColors.darkAccent : '#B22A2A'}}" class="segment-edit-icon" />
         </view>
       </view>
     </view>
+
+    <!-- 时间段编辑弹窗 -->
+    <van-popup
+      show="{{showSegmentEditModal}}"
+      position="bottom"
+      custom-style="height: 50%; border-radius: 20rpx 20rpx 0 0; background-color: {{themeColors ? themeColors.cardBg : '#F7EBD5'}};"
+      bind:close="onSegmentEditClose"
+      closeable
+      close-icon-position="top-right"
+    >
+      <view class="segment-edit-modal theme-{{theme}}">
+        <view class="modal-header">
+          <text class="edit-title">编辑时间段</text>
+        </view>
+        <view class="time-section">
+          <view class="time-item">
+            <view class="time-label">开始时间</view>
+            <picker 
+              mode="multiSelector" 
+              value="{{editingSegmentStartTimeArray}}" 
+              range="{{timeColumns}}"
+              range-key=""
+              bindchange="onEditingSegmentStartTimeChange"
+              bindcolumnchange="onEditingSegmentStartTimeColumnChange"
+            >
+              <view class="time-picker">
+                {{editingSegmentStartTime || '选择开始时间'}}
+                <van-icon name="arrow" size="14px" color="{{themeColors ? themeColors.darkAccent : '#B22A2A'}}" />
+              </view>
+            </picker>
+          </view>
+          <view class="time-item">
+            <view class="time-label">结束时间</view>
+            <picker 
+              mode="multiSelector" 
+              value="{{editingSegmentEndTimeArray}}" 
+              range="{{timeColumns}}"
+              range-key=""
+              bindchange="onEditingSegmentEndTimeChange"
+              bindcolumnchange="onEditingSegmentEndTimeColumnChange"
+            >
+              <view class="time-picker">
+                {{editingSegmentEndTime || '选择结束时间'}}
+                <van-icon name="arrow" size="14px" color="{{themeColors ? themeColors.darkAccent : '#B22A2A'}}" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="save-section">
+          <van-button
+            type="primary"
+            size="normal"
+            custom-color="{{themeColors ? themeColors.accent : '#F6C12C'}}"
+            bindtap="onSegmentEditSave"
+            class="save-btn"
+            custom-style="width: 220rpx; min-width: 220rpx; max-width: 220rpx;"
+          >
+            保存
+          </van-button>
+        </view>
+      </view>
+    </van-popup>
 
     <!-- 分类选择 -->
     <view class="category-section">

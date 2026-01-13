@@ -222,6 +222,42 @@
   font-size: 24rpx;
   color: #969799;
   margin-left: 20rpx;
+  margin-right: 12rpx;
+}
+
+.segment-edit-icon {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.segment-edit-modal {
+  padding: 40rpx 30rpx;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.segment-edit-modal.theme-warm {
+  background-color: #F7EBD5;
+}
+
+.segment-edit-modal.theme-cool {
+  background-color: #e4e9ec;
+}
+
+.edit-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 30rpx;
+}
+
+.theme-warm .edit-title {
+  color: #B22A2A;
+}
+
+.theme-cool .edit-title {
+  color: #234369;
 }
 
 .category-section {
@@ -294,7 +330,7 @@
 
 .note-textarea {
   width: 100%;
-  min-height: 80rpx;
+  min-height: 160rpx;
   border-radius: 8rpx;
   padding: 20rpx;
   font-size: 28rpx;
