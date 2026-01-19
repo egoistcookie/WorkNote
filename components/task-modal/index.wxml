@@ -42,7 +42,7 @@
     <!-- 编辑模式：开始和结束时间 -->
     <view class="time-section" wx:if="{{isEditMode}}">
       <view class="time-item">
-        <view class="time-label">开始时间</view>
+        <view class="time-label">记录时间</view>
         <picker 
           mode="multiSelector" 
           value="{{startTimeArray}}" 
@@ -52,7 +52,7 @@
           bindcolumnchange="onStartTimeColumnChange"
         >
           <view class="time-picker">
-            {{startTime || '选择开始时间'}}
+            {{startTime || '选择记录时间'}}
             <van-icon name="arrow" size="14px" color="{{themeColors ? themeColors.darkAccent : '#B22A2A'}}" />
           </view>
         </picker>

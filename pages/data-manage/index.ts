@@ -55,35 +55,38 @@ Page({
           }
           
           // 获取精确到秒的开始和结束时间
-          // 优先使用手动修改后的startTime和endTime（这些是用户实际设置的时间）
-          let startTimeText = task.startTime || ''
-          let endTimeText = task.endTime || ''
+          // 优先使用实际任务开始时间（第一段时间段的开始时间）
+          let startTimeText = ''
+          let endTimeText = ''
           
-          // 如果startTime和endTime存在，优先使用它们（手动修改后的值）
-          // 只有在它们不存在时，才从timeSegments或createdAt/updatedAt中提取
-          if (!startTimeText || !endTimeText) {
-            // 如果有时段数据，从时间戳中提取精确时间
-            if (task.timeSegments && task.timeSegments.length > 0) {
-              // 使用第一个时间段的开始时间戳
-              const firstSegment = task.timeSegments[0]
-              if (!startTimeText && firstSegment.startTimestamp) {
-                startTimeText = formatTimeWithSeconds(new Date(firstSegment.startTimestamp))
-              }
-              // 使用最后一个时间段的结束时间戳
-              const lastSegment = task.timeSegments[task.timeSegments.length - 1]
-              if (!endTimeText && lastSegment.endTimestamp) {
-                endTimeText = formatTimeWithSeconds(new Date(lastSegment.endTimestamp))
-              }
-            } else if (task.createdAt && task.updatedAt) {
-              // 如果没有时段数据，使用创建和更新时间作为参考
-              // 但只有当 startTime 和 endTime 都不存在时才使用
-              if (!startTimeText && task.createdAt) {
-                startTimeText = formatTimeWithSeconds(new Date(task.createdAt))
-              }
-              if (!endTimeText && task.updatedAt && task.status === TaskStatus.COMPLETED) {
-                endTimeText = formatTimeWithSeconds(new Date(task.updatedAt))
-              }
+          // 优先从timeSegments中提取实际开始和结束时间
+          if (task.timeSegments && task.timeSegments.length > 0) {
+            // 使用第一个时间段的开始时间戳作为实际任务开始时间
+            const firstSegment = task.timeSegments[0]
+            if (firstSegment.startTimestamp) {
+              startTimeText = formatTimeWithSeconds(new Date(firstSegment.startTimestamp))
             }
+            // 使用最后一个时间段的结束时间戳
+            const lastSegment = task.timeSegments[task.timeSegments.length - 1]
+            if (lastSegment.endTimestamp) {
+              endTimeText = formatTimeWithSeconds(new Date(lastSegment.endTimestamp))
+            }
+          }
+          
+          // 如果没有时间段数据，使用手动修改的startTime和endTime
+          if (!startTimeText && task.startTime) {
+            startTimeText = task.startTime
+          }
+          if (!endTimeText && task.endTime) {
+            endTimeText = task.endTime
+          }
+          
+          // 如果还是没有，使用createdAt和updatedAt作为参考
+          if (!startTimeText && task.createdAt) {
+            startTimeText = formatTimeWithSeconds(new Date(task.createdAt))
+          }
+          if (!endTimeText && task.updatedAt && task.status === TaskStatus.COMPLETED) {
+            endTimeText = formatTimeWithSeconds(new Date(task.updatedAt))
           }
           
           // 如果时间格式是 HH:mm，补充秒数（:00）
