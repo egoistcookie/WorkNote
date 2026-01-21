@@ -84,6 +84,7 @@ Page({
   },
 
   onToggleStatus(e: WechatMiniprogram.TouchEvent) {
+    // 使用catchtap会自动阻止事件冒泡
     const { id } = e.currentTarget.dataset
     const { allTasks } = this.data
     
@@ -112,12 +113,14 @@ Page({
   },
 
   onDeleteTask(e: WechatMiniprogram.TouchEvent) {
+    // 使用catchtap会自动阻止事件冒泡
     const { id } = e.currentTarget.dataset
     this.setData({
       showDeleteConfirm: true,
       deletingTaskId: id
     })
   },
+
 
   onConfirmDelete() {
     const { allTasks, deletingTaskId } = this.data
@@ -152,6 +155,19 @@ Page({
       [TaskPriority.NOT_URGENT_NOT_IMPORTANT]: '不紧急&不重要'
     }
     return map[priority] || '未知'
+  },
+
+  onTaskTap(e: WechatMiniprogram.TouchEvent) {
+    const { task } = e.currentTarget.dataset
+    if (!task) return
+
+    // 待办任务的标题就是分类名称，跳转到详情页展示所有时间信息
+    const categoryName = task.title || task.category
+    if (categoryName) {
+      wx.navigateTo({
+        url: `/pages/todo-detail/index?category=${encodeURIComponent(categoryName)}`
+      })
+    }
   }
 })
 

@@ -34,12 +34,14 @@
       class="task-item {{item.status === 'completed' ? 'completed' : ''}}" 
       wx:for="{{filteredTasks}}" 
       wx:key="id"
+      bindtap="onTaskTap"
+      data-task="{{item}}"
     >
       <view class="task-header">
         <view class="task-title-wrapper">
           <view 
             class="task-checkbox {{item.status === 'completed' ? 'checked' : ''}}"
-            bindtap="onToggleStatus"
+            catchtap="onToggleStatus"
             data-id="{{item.id}}"
           >
             <van-icon 
@@ -56,7 +58,7 @@
             name="delete-o" 
             size="18px" 
             color="#ee0a24" 
-            bindtap="onDeleteTask"
+            catchtap="onDeleteTask"
             data-id="{{item.id}}"
           />
         </view>
