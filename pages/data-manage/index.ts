@@ -5,12 +5,14 @@ import { getStorageSync, setStorageSync } from '../../utils/storage'
 import { formatDate, formatDurationWithSeconds, formatTimeWithSeconds } from '../../utils/date'
 import { getAllCategories, setAllCategories, CategoryItem } from '../../utils/category'
 import { getCurrentTheme, getThemeColors, type ThemeType, type ThemeColors } from '../../utils/theme'
+import { getApiUrl } from '../../utils/config'
 
 Page({
   data: {
     exportText: '',
     theme: 'warm' as ThemeType,
-    themeColors: null as ThemeColors | null
+    themeColors: null as ThemeColors | null,
+    uploading: false
   },
 
   onLoad() {
@@ -264,5 +266,115 @@ Page({
   onThemeChange(theme: ThemeType) {
     const themeColors = getThemeColors(theme)
     this.setData({ theme, themeColors })
+  },
+
+  onUploadTap() {
+    if (this.data.uploading) {
+      return
+    }
+
+    wx.showModal({
+      title: '确认上传',
+      content: '确定要上传数据到服务器吗？',
+      success: (res) => {
+        if (res.confirm) {
+          this.uploadData()
+        }
+      }
+    })
+  },
+
+  uploadData() {
+    this.setData({ uploading: true })
+    
+    const apiUrl = getApiUrl('/worknoteApi/upload-data')
+    
+    // 获取用户ID（小程序端目前没有用户认证，使用默认值）
+    // 实际生产环境应该从登录token或session中获取
+    const userId = 1 // 默认用户ID，实际应该从登录信息获取
+    
+    // 获取用户信息
+    const userProfile = getStorageSync<{ name?: string; email?: string; avatar?: string }>('user_profile') || {}
+    const userName = userProfile.name || '未命名'
+    const userEmail = userProfile.email || ''
+    
+    // 对用户名和邮箱进行URL编码，避免请求头包含非ISO-8859-1字符
+    const encodedUserName = encodeURIComponent(userName)
+    const encodedUserEmail = userEmail ? encodeURIComponent(userEmail) : ''
+    
+    wx.request({
+      url: apiUrl,
+      method: 'POST',
+      header: {
+        'Content-Type': 'text/plain;charset=utf-8',
+        'x-user-name': encodedUserName,
+        'x-user-email': encodedUserEmail
+      },
+      data: this.data.exportText,
+      success: (res) => {
+        if (res.statusCode === 200 && (res.data as any).success) {
+          const data = res.data as any
+          wx.showToast({
+            title: '上传成功',
+            icon: 'success'
+          })
+          // 可以显示统计信息
+          if (data.stats) {
+            setTimeout(() => {
+              wx.showModal({
+                title: '上传成功',
+                content: `任务: ${data.stats.taskCount}条\n待办: ${data.stats.todoCount}条\n日志: ${data.stats.logCount}条\n分类: ${data.stats.categoryCount}个`,
+                showCancel: false
+              })
+            }, 1000)
+          }
+        } else {
+          const errorMsg = (res.data as any)?.message || `上传失败: ${res.statusCode}`
+          wx.showToast({
+            title: errorMsg,
+            icon: 'none',
+            duration: 2000
+          })
+        }
+      },
+      fail: (err) => {
+        console.error('上传失败:', err)
+        
+        // 根据错误类型显示不同的提示
+        let errorMsg = '上传失败，请检查网络和API配置'
+        
+        if (err.errMsg) {
+          // 域名未配置错误
+          if (err.errMsg.includes('request:fail') && err.errMsg.includes('not in domain list')) {
+            errorMsg = '域名未配置，请在微信公众平台配置服务器域名'
+          }
+          // 网络错误
+          else if (err.errMsg.includes('timeout')) {
+            errorMsg = '请求超时，请检查网络连接'
+          }
+          // SSL证书错误
+          else if (err.errMsg.includes('SSL') || err.errMsg.includes('certificate')) {
+            errorMsg = 'SSL证书错误，请检查服务器证书配置'
+          }
+          // 其他网络错误
+          else if (err.errMsg.includes('network')) {
+            errorMsg = '网络连接失败，请检查网络设置'
+          }
+        }
+        
+        // 显示详细错误信息到控制台
+        console.error('详细错误信息:', JSON.stringify(err, null, 2))
+        
+        wx.showModal({
+          title: '上传失败',
+          content: `${errorMsg}\n\n请确认：\n1. 已在微信公众平台配置服务器域名\n2. 服务器域名使用HTTPS\n3. 网络连接正常`,
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      },
+      complete: () => {
+        this.setData({ uploading: false })
+      }
+    })
   }
 })

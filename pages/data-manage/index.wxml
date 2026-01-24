@@ -16,10 +16,20 @@
         type="success" 
         size="small" 
         bindtap="onImportTap"
-        custom-style="width: 140rpx;"
+        custom-style="width: 140rpx; margin-right: 20rpx;"
       >
         <van-icon name="add-o" size="16px" />
         <text class="button-text">导入</text>
+      </van-button>
+      <van-button 
+        type="warning" 
+        size="small" 
+        bindtap="onUploadTap"
+        custom-style="width: 140rpx;"
+        loading="{{uploading}}"
+      >
+        <van-icon name="upload" size="16px" />
+        <text class="button-text">上传</text>
       </van-button>
     </view>
   </view>
